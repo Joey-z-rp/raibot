@@ -10,7 +10,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "mic": "^2.1.2"
+    "mic": "^2.1.2",
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "@types/node": "^20.11.24",
