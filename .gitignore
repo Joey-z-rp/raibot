@@ -162,3 +162,5 @@ cython_debug/
 temp-audio-files
 
 node_modules
+
+.DS_Store

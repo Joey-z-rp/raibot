@@ -1,6 +1,14 @@
 import * as mic from "mic";
-import { createWriteStream } from "fs";
+import { createWriteStream, existsSync, mkdirSync } from "fs";
 import { v4 } from "uuid";
+
+const TEMP_FOLDER_PATH = "../temp-audio-files";
+
+const createTempFolder = () => {
+  if (!existsSync(TEMP_FOLDER_PATH)) {
+    mkdirSync(TEMP_FOLDER_PATH);
+  }
+};
 
 let micInstance = null;
 
@@ -15,7 +23,7 @@ export const startRecording = (onComplete: (filePath: string) => void) => {
     fileType: "wav",
   });
 
-  const filePath = `../temp-audio-files/${v4()}.wav`;
+  const filePath = `${TEMP_FOLDER_PATH}/${v4()}.wav`;
   const micInputStream = micInstance.getAudioStream();
 
   micInputStream.on("startComplete", () => {
@@ -35,3 +43,5 @@ export const startRecording = (onComplete: (filePath: string) => void) => {
 export const stopRecording = () => {
   if (micInstance) micInstance.stop();
 };
+
+createTempFolder();
