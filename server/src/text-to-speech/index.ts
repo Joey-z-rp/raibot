@@ -46,7 +46,11 @@ export const startTtsProcessor = () => {
         rej(new Error("TTS processing timed out after 10s"));
       }, 10000);
 
-      processor.stdin.write(`${text}\n`);
+      // Remove non-ASCII characters and new lines
+      const filteredText = text
+        .replace(/(\r\n|\n|\r)/gm, " ")
+        .replace(/[^\x00-\x7F]/g, "");
+      processor.stdin.write(`${filteredText}\n`);
     });
 
   return { convert };

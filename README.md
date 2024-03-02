@@ -1,1 +1,1 @@
-External dependencies: sox, poetry
+External dependencies: `sox`, `poetry`, `ollama`
