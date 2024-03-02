@@ -1,1 +1,1 @@
-External dependencies: sox
+External dependencies: sox, poetry

@@ -18,7 +18,7 @@ export const startSttProcessor = () => {
   });
 
   const transcribe = (filePath: string) =>
-    new Promise((res, rej) => {
+    new Promise<string>((res, rej) => {
       if (isTranscribing)
         return rej("Another STT transcription is in progress");
 
@@ -27,7 +27,7 @@ export const startSttProcessor = () => {
 
       const processResult = (result: Buffer) => {
         if (timer) clearTimeout(timer);
-        
+
         processor.stdout.removeListener("data", processResult);
         unlink(filePath, (err) => {
           if (err) console.error(err);
