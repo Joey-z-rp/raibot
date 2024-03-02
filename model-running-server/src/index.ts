@@ -23,16 +23,14 @@ import { runModel } from "./language-model";
         isRecording = false;
       } else {
         isRecording = true;
-        startRecording((filePath) =>
-          transcribe(filePath)
-            .then((text) => ask(text))
-            .then((answer) => {
-              if (answer) return convert(answer);
-            })
-            .then((fileName) => {
-              if (fileName) return playAudio(fileName);
-            })
-        );
+        const process = async () => {
+          const recordedFile = await startRecording();
+          const transcribedText = await transcribe(recordedFile);
+          const answer = await ask(transcribedText);
+          const audioFile = answer && (await convert(answer));
+          if (audioFile) await playAudio(audioFile);
+        };
+        process();
       }
 
       listen();
