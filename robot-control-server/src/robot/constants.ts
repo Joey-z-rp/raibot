@@ -1,20 +1,6 @@
-export const positions = [
-  "frontLeftLow",
-  "frontLeftHigh",
-  "frontLeftShoulder",
-  "rearLeftLow",
-  "rearLeftHigh",
-  "rearLeftShoulder",
-  "rearRightShoulder",
-  "rearRightHigh",
-  "rearRightLow",
-  "frontRightShoulder",
-  "frontRightHigh",
-  "frontRightLow",
-  "head",
-] as const;
+import { Position } from "../command-interface";
 
-export const positionToChannelMap = {
+export const positionToChannelMap: Record<Position, number> = {
   frontLeftLow: 2,
   frontLeftHigh: 3,
   frontLeftShoulder: 4,
@@ -30,7 +16,7 @@ export const positionToChannelMap = {
   head: 15,
 };
 
-export const positionToMovementDirectionMap = {
+export const positionToMovementDirectionMap: Record<Position, number> = {
   frontLeftLow: 1,
   frontLeftHigh: -1,
   frontLeftShoulder: -1,
@@ -46,7 +32,10 @@ export const positionToMovementDirectionMap = {
   head: 1,
 };
 
-export const positionToOperationLimitMap = {
+export const positionToOperationLimitMap: Record<
+  Position,
+  { low: number; high: number }
+> = {
   frontLeftLow: { low: 30, high: 150 },
   frontLeftHigh: { low: 30, high: 150 },
   frontLeftShoulder: { low: 30, high: 150 },
@@ -61,5 +50,3 @@ export const positionToOperationLimitMap = {
   frontRightLow: { low: 30, high: 150 },
   head: { low: 30, high: 150 },
 };
-
-export type Position = (typeof positions)[number];

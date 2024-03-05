@@ -10,11 +10,13 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/ws": "^8.5.10",
     "ts-node": "^10.9.2",
     "typescript": "^5.3.3"
   },
   "dependencies": {
     "i2c-bus": "^5.2.3",
-    "pca9685": "^5.0.0"
+    "pca9685": "^5.0.0",
+    "ws": "^8.16.0"
   }
 }

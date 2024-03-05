@@ -1,4 +1,5 @@
-import { Position, positionToOperationLimitMap, positions } from "./constants";
+import { Position, positions } from "../command-interface";
+import { positionToOperationLimitMap } from "./constants";
 import { Servo } from "./servo";
 
 class Robot {

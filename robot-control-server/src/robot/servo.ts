@@ -1,9 +1,14 @@
-import { rotateServo } from "../utils/servo-driver";
+import { Position } from "../command-interface";
 import {
-  Position,
   positionToChannelMap,
   positionToMovementDirectionMap,
 } from "./constants";
+
+const rotateServo =
+  process.platform === "darwin"
+    ? (position: string, angle: number) =>
+        console.log("Rotating servo: ", { position, angle })
+    : require("../utils/servo-driver").rotateServo;
 
 type OperationLimit = {
   high: number;
