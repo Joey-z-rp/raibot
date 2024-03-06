@@ -8,7 +8,7 @@ const wsServer = new WebSocketServer({ server });
 const port = 8000;
 server.listen(port, () => {
   console.info(`WebSocket server is running on port ${port}`);
-  console.info(`IP: ${networkInterfaces()["en0"]?.[0].address}`);
+  console.info(`IP: ${networkInterfaces()["wlan0"]?.[0].address}`);
 });
 
 let currentConnection: WebSocket | undefined;

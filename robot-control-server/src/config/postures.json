@@ -1,1 +1,32 @@
-{}
+{
+    "REST": {
+        "frontLeftLow": 104,
+        "frontLeftHigh": 82,
+        "frontLeftShoulder": 76,
+        "rearLeftLow": 90,
+        "rearLeftHigh": 102,
+        "rearLeftShoulder": 94,
+        "rearRightShoulder": 72,
+        "rearRightHigh": 66,
+        "rearRightLow": 64,
+        "frontRightShoulder": 82,
+        "frontRightHigh": 90,
+        "frontRightLow": 76,
+        "head": 80
+    },
+    "STAND": {
+        "frontLeftLow": 104,
+        "frontLeftHigh": 134,
+        "frontLeftShoulder": 72,
+        "rearLeftLow": 90,
+        "rearLeftHigh": 144,
+        "rearLeftShoulder": 86,
+        "rearRightShoulder": 80,
+        "rearRightHigh": 24,
+        "rearRightLow": 64,
+        "frontRightShoulder": 86,
+        "frontRightHigh": 40,
+        "frontRightLow": 76,
+        "head": 80
+    }
+}
