@@ -1,60 +1,74 @@
 "use client";
-import { useRef, useState } from "react";
-import useWebSocket from "react-use-websocket";
+import { useServerCommand } from "@/hooks/use-server-command";
+import { useRef } from "react";
+import { Control } from "./control";
+import { Button } from "@/components/button";
+import { SavePostures } from "./save-postures";
 
 export default function Page() {
-  const [wsServerIp, setWsServerIp] = useState<string>();
-  const [isConnected, setIsConnected] = useState(false);
   const ipInputRef = useRef<HTMLInputElement>(null);
 
-  const { sendJsonMessage } = useWebSocket(
-    wsServerIp ? `ws://${wsServerIp}:8000` : null,
-    {
-      onOpen: () => {
-        console.log("WebSocket connection established.");
-        setIsConnected(true);
-      },
-    }
-  );
+  const { connect, isConnected, sendCommand } = useServerCommand();
 
   return (
     <div className="h-full">
-      <h1>Calibration</h1>
-      <div>
+      <h1 className="mb-4 text-5xl font-extrabold dark:text-white">
+        Calibration
+      </h1>
+      <div className="mb-4">
         <input placeholder="WS server IP" ref={ipInputRef} />
-        <button
+        <Button
           onClick={() =>
-            ipInputRef.current?.value && setWsServerIp(ipInputRef.current.value)
+            ipInputRef.current?.value && connect(ipInputRef.current.value)
           }
         >
           Connect
-        </button>
+        </Button>
         <div>
           WS Server connection status:{" "}
           {isConnected ? "Connected" : "Disconnected"}
         </div>
       </div>
-      <div>
-        <div className="flex">
-          <div>
-            <h2>Rear left</h2>
-            <div>
-              <button
-                onClick={() =>
-                  sendJsonMessage({
-                    action: "test",
-                  })
-                }
-              >
-                Move
-              </button>
-            </div>
+      <div className="flex mb-4">
+        <div>
+          <div className="flex">
+            <Control
+              title="Rear left"
+              positions={["rearLeftShoulder", "rearLeftHigh", "rearLeftLow"]}
+              sendCommand={sendCommand}
+            />
+            <Control
+              title="Front left"
+              positions={["frontLeftShoulder", "frontLeftHigh", "frontLeftLow"]}
+              sendCommand={sendCommand}
+            />
           </div>
-          <div>
-            <h2>Front left</h2>
+          <div className="flex">
+            <Control
+              title="Rear right"
+              positions={["rearRightShoulder", "rearRightHigh", "rearRightLow"]}
+              sendCommand={sendCommand}
+            />
+            <Control
+              title="Front right"
+              positions={[
+                "frontRightShoulder",
+                "frontRightHigh",
+                "frontRightLow",
+              ]}
+              sendCommand={sendCommand}
+            />
           </div>
         </div>
+        <div>
+          <Control
+            title="Head"
+            positions={["head"]}
+            sendCommand={sendCommand}
+          />
+        </div>
       </div>
+      <SavePostures sendCommand={sendCommand} />
     </div>
   );
 }

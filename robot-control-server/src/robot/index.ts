@@ -1,4 +1,5 @@
-import { Position, positions } from "../command-interface";
+import { Position, Posture, positions } from "../command-interface";
+import { readFromJson, writeToJson } from "../utils/json-helper";
 import { positionToOperationLimitMap } from "./constants";
 import { Servo } from "./servo";
 
@@ -20,6 +21,19 @@ class Robot {
 
   get servos() {
     return this.allServos;
+  }
+
+  savePosture(posture: Posture) {
+    const servoAngles = Object.entries(this.allServos).reduce(
+      (angles, [position, servo]) => ({
+        ...angles,
+        [position]: servo.currentAngle,
+      }),
+      {}
+    );
+    const configPath = "./src/config/postures.json";
+    const postures = readFromJson(configPath);
+    writeToJson(configPath, { ...postures, [posture]: servoAngles });
   }
 }
 

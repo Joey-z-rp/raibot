@@ -51,4 +51,8 @@ export class Servo {
       this.angle + amount * positionToMovementDirectionMap[this.position]
     );
   }
+
+  get currentAngle() {
+    return this.angle;
+  }
 }
