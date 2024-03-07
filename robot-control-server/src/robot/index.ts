@@ -24,16 +24,20 @@ class Robot {
   }
 
   savePosture(posture: Posture) {
-    const servoAngles = Object.entries(this.allServos).reduce(
+    const servoAngles = this.getServoAngles();
+    const configPath = "./src/config/postures.json";
+    const postures = readFromJson(configPath);
+    writeToJson(configPath, { ...postures, [posture]: servoAngles });
+  }
+
+  getServoAngles() {
+    return Object.entries(this.allServos).reduce(
       (angles, [position, servo]) => ({
         ...angles,
         [position]: servo.currentAngle,
       }),
-      {}
+      {} as Record<Position, number>
     );
-    const configPath = "./src/config/postures.json";
-    const postures = readFromJson(configPath);
-    writeToJson(configPath, { ...postures, [posture]: servoAngles });
   }
 }
 

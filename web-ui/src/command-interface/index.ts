@@ -39,3 +39,21 @@ export type CommandArguments = {
     postureName: Posture;
   };
 };
+
+export type CommandObject = {
+  command: Command;
+  args: CommandArguments[Command];
+};
+
+export const availableServerMessages = ["SERVO_ANGLES"] as const;
+
+export type ServerMessage = (typeof availableServerMessages)[number];
+
+export type ServerMessageContents = {
+  SERVO_ANGLES: Record<Position, number>;
+};
+
+export type ServerMessageObject = {
+  type: ServerMessage;
+  content: ServerMessageContents[ServerMessage];
+};

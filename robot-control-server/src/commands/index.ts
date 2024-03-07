@@ -1,21 +1,18 @@
-import { Command, CommandArguments } from "../command-interface";
+import { Command, CommandObject } from "../command-interface";
 import { move } from "./move";
 import { savePosture } from "./save-posture";
 import { turnToAngle } from "./turnToAngle";
 
-const commandHandlers = {
+const commandHandlers: Record<Command, Function> = {
   MOVE: move,
   TURN_TO_ANGLE: turnToAngle,
   SAVE_POSTURE: savePosture,
 };
 
-export const processCommand = <T extends Command>(message: {
-  command: T;
-  args: CommandArguments[T];
-}) => {
-  const handler = commandHandlers[message.command];
+export const processCommand = (command: CommandObject) => {
+  const handler = commandHandlers[command.command];
   if (!handler) {
-    return console.warn(`Command ${message.command} is invalid`);
+    return console.warn(`Command ${command.command} is invalid`);
   }
-  handler(message.args as any);
+  handler(command.args as any);
 };

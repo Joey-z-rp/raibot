@@ -1,6 +1,7 @@
 import { Position } from "@/command-interface";
-import { Button } from "@/components/button";
-import { SendCommand } from "@/types/command";
+import { Button } from "@/components/ui/button";
+import { useRobotServer } from "@/hooks/use-robot-server";
+import { SendCommand } from "@/types/server-context";
 import { useRef } from "react";
 
 const lowAndHeadPositionLabels = ["Down", "Up"];
@@ -31,6 +32,7 @@ const ServoControl = ({
   sendCommand: SendCommand;
 }) => {
   const inputRef = useRef<HTMLInputElement>(null);
+  const { servoAngles } = useRobotServer();
 
   const move = (amount: number) =>
     sendCommand({
@@ -53,7 +55,8 @@ const ServoControl = ({
   };
 
   return (
-    <div className="flex gap-1">
+    <div className="flex gap-1 items-center">
+      <span>Angle: {servoAngles[position]}</span>
       <Button onClick={() => move(-2)}>{moveButtonLabels[position][0]}</Button>
       <Button onClick={() => move(2)}>{moveButtonLabels[position][1]}</Button>
       <div className="flex gap-2">
