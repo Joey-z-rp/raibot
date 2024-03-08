@@ -5,12 +5,12 @@ import {
 } from "./constants";
 
 const MOVE_INTERVAL = 20; // 20ms
-const BASE_MOVE_AMOUNT = 1; // 1 degree
+const BASE_MOVE_AMOUNT = 0.8; // 1 degree
 
 const rotateServo =
   process.platform === "darwin"
     ? (position: string, angle: number) =>
-        console.log("Rotating servo: ", { position, angle })
+      console.log("Rotating servo: ", { position, angle })
     : require("../utils/servo-driver").rotateServo;
 
 type OperationLimit = {
@@ -36,16 +36,26 @@ export class Servo {
   constructor({
     operationLimit,
     position,
+    startingAngle,
   }: {
     operationLimit: OperationLimit;
     position: Position;
+    startingAngle: number;
   }) {
-    this.angle = 90;
-    this.targetAngle = 90;
+    this.angle = startingAngle;
+    this.targetAngle = startingAngle;
     this.operationLimit = operationLimit;
     this.position = position;
-    this.speed = 5;
+    this.speed = 6;
     this.isMoving = false;
+  }
+
+  init() {
+    console.log(this.position, this.angle)
+    rotateServo(
+      positionToChannelMap[this.position],
+      this.angle
+    );
   }
 
   turnToAngle() {
@@ -53,7 +63,7 @@ export class Servo {
 
     return new Promise((res) => {
       const turn = () => {
-        const movingAmount = BASE_MOVE_AMOUNT * this.speed;
+        const movingAmount = this.speed < 6 ? BASE_MOVE_AMOUNT * this.speed : Math.abs(this.targetAngle - this.angle);
         const movingDirection = this.targetAngle - this.angle > 0 ? 1 : -1;
         const resultingAngle = this.angle + movingAmount * movingDirection;
         const isDone =
@@ -66,6 +76,7 @@ export class Servo {
           positionToChannelMap[this.position],
           targetAngleForThisInterval
         );
+        this.angle = targetAngleForThisInterval
 
         if (!isDone) {
           this.movingTimer = setTimeout(turn, MOVE_INTERVAL);

@@ -5,5 +5,5 @@ export const turnToAngle = ({
   position,
   angle,
 }: CommandArguments["TURN_TO_ANGLE"]) => {
-  robot.servos[position].setAngle(angle);
+  robot.servos[position].setTargetAngle(angle);
 };
