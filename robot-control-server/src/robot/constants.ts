@@ -59,17 +59,17 @@ export const positionToIKAngleConversionsMap: Record<
     (actualAngle) => 184 - actualAngle,
     (iKAngle) => 184 - iKAngle,
   ],
-  frontLeftHigh: [(actualAngle) => actualAngle + 8, (iKAngle) => iKAngle - 8],
+  frontLeftHigh: [(actualAngle) => actualAngle + 12, (iKAngle) => iKAngle - 12],
   rearLeftLow: [(actualAngle) => 174 - actualAngle, (iKAngle) => 174 - iKAngle],
-  rearLeftHigh: [(actualAngle) => actualAngle - 12, (iKAngle) => iKAngle + 12],
+  rearLeftHigh: [(actualAngle) => actualAngle - 2, (iKAngle) => iKAngle + 2],
   rearRightHigh: [
-    (actualAngle) => 156 - actualAngle,
-    (iKAngle) => 156 - iKAngle,
+    (actualAngle) => 164 - actualAngle,
+    (iKAngle) => 164 - iKAngle,
   ],
   rearRightLow: [(actualAngle) => actualAngle + 16, (iKAngle) => iKAngle - 16],
   frontRightHigh: [
-    (actualAngle) => 180 - actualAngle,
-    (iKAngle) => 180 - iKAngle,
+    (actualAngle) => 184 - actualAngle,
+    (iKAngle) => 184 - iKAngle,
   ],
   frontRightLow: [(actualAngle) => actualAngle + 6, (iKAngle) => iKAngle - 6],
 };
