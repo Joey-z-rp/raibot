@@ -4,6 +4,7 @@ import {
   LimbPosition,
   Position,
 } from "../../command-interface";
+import { delay } from "../../utils/delay";
 import { Limb } from "../limb";
 import { Servo } from "../servo";
 import { moveForwardSteps } from "./move-forward";
@@ -24,7 +25,9 @@ export const executeAction = async (
   limbs: Record<LimbPosition, Limb>,
   allServos: Record<Position, Servo>
 ) => {
+  let result = undefined;
   for (const step of actionSteps[action.type]) {
-    await step(action, limbs, allServos);
+    result = await step(action, limbs, allServos, result);
+    await delay(20)
   }
 };

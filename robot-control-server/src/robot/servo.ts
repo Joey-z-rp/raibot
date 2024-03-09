@@ -9,13 +9,14 @@ import {
   positionToMovementDirectionMap,
 } from "./constants";
 
-const MOVE_INTERVAL = 20; // 20ms
+const TIME_TO_TURN = 20; // The time needed for the servo to turn to the target angle
+const MOVE_INTERVAL = 20; // 20ms, can't be less than TIME_TO_TURN
 const BASE_MOVE_AMOUNT = 0.8; // 1 degree
 
 const rotateServo =
   process.platform === "darwin"
     ? (position: string, angle: number) =>
-        console.info("Rotating servo: ", { position, angle })
+      console.info("Rotating servo: ", { position, angle })
     : require("../utils/servo-driver").rotateServo;
 
 type OperationLimit = {
@@ -62,7 +63,7 @@ export class Servo {
   turnToAngle() {
     this.isServoMoving = true;
 
-    return new Promise((res) => {
+    return new Promise((resolve) => {
       const turn = () => {
         const movingAmount =
           this.speed < 6
@@ -80,14 +81,16 @@ export class Servo {
           positionToChannelMap[this.position],
           targetAngleForThisInterval
         );
-        this.angle = targetAngleForThisInterval;
+        new Promise(res => setTimeout(res, TIME_TO_TURN)).then(() => {
+          this.angle = targetAngleForThisInterval;
 
-        if (!isDone) {
-          this.movingTimer = setTimeout(turn, MOVE_INTERVAL);
-        } else {
-          this.isServoMoving = false;
-          res(undefined);
-        }
+          if (!isDone) {
+            this.movingTimer = setTimeout(turn, MOVE_INTERVAL - TIME_TO_TURN);
+          } else {
+            this.isServoMoving = false;
+            resolve(undefined);
+          }
+        })
       };
 
       turn();

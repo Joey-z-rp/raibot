@@ -39,25 +39,29 @@ export class Limb {
     return this.servos.upper.isMoving || this.servos.lower.isMoving;
   }
 
-  private move(xDistance: number, yDistance: number) {
-    if (this.isLegMoving()) return;
-
-    const { x, y } = this.getCurrentCoordinate();
+  moveTo(x: number, y: number) {
     const { upperAngle, lowerAngle } = convertCoordinateToAngle({
       upperLength: UPPER_LEG_LENGTH,
       lowerLength: LOWER_LEG_LENGTH,
-      x: x + xDistance,
-      y: y + yDistance,
+      x,
+      y,
     });
 
     return Promise.all([
       this.servos.upper.setTargetAngle(
-        Math.round(this.servos.upper.convertIKAngleToAngle(upperAngle))
+        this.servos.upper.convertIKAngleToAngle(upperAngle)
       ),
       this.servos.lower.setTargetAngle(
-        Math.round(this.servos.lower.convertIKAngleToAngle(lowerAngle))
+        this.servos.lower.convertIKAngleToAngle(lowerAngle)
       ),
     ]);
+  }
+
+  move(xDistance: number, yDistance: number) {
+    if (this.isLegMoving()) return;
+
+    const { x, y } = this.getCurrentCoordinate();
+    return this.moveTo(x + xDistance, y + yDistance)
   }
 
   moveLeg(direction: MoveLegDirection, distance: number) {

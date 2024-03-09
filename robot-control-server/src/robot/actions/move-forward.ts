@@ -1,40 +1,47 @@
+import { LimbPosition, limbPositions } from "../../command-interface";
 import { ActionStep } from "./types";
 
-export const moveForwardSteps: ActionStep<"MOVE_FORWARD">[] = [
-  (_, limbs) => {
-    return Promise.all([
-      limbs.frontLeft.moveLeg("UP", 4),
-      limbs.rearRight.moveLeg("UP", 4),
+type StartingCoordinates = Record<LimbPosition, { x: number, y: number }>
+
+export const moveForwardSteps: ActionStep<"MOVE_FORWARD", StartingCoordinates>[] = [
+  async (_, limbs) => {
+    const startingCoordinates = limbPositions.reduce((coordinates, position) => ({
+      ...coordinates
+      , [position]: limbs[position].getCurrentCoordinate()
+    }), {} as StartingCoordinates)
+    await Promise.all([
+      limbs.frontLeft.moveTo(startingCoordinates.frontLeft.x + 10, startingCoordinates.frontLeft.y - 3),
+      limbs.rearRight.moveTo(startingCoordinates.rearRight.x + 10, startingCoordinates.rearRight.y - 3),
+      limbs.frontRight.moveTo(startingCoordinates.frontRight.x - 10, startingCoordinates.frontRight.y),
+      limbs.rearLeft.moveTo(startingCoordinates.rearLeft.x - 10, startingCoordinates.rearLeft.y),
     ]);
+    return startingCoordinates;
   },
-  (_, limbs) => {
-    return Promise.all([
-      limbs.frontLeft.moveLeg("FORWARD", 4),
-      limbs.rearRight.moveLeg("FORWARD", 4),
+  async (_, limbs, __, startingCoordinates) => {
+    await Promise.all([
+      limbs.frontLeft.moveTo(startingCoordinates.frontLeft.x + 20, startingCoordinates.frontLeft.y),
+      limbs.rearRight.moveTo(startingCoordinates.rearRight.x + 20, startingCoordinates.rearRight.y),
+      limbs.frontRight.moveTo(startingCoordinates.frontRight.x - 20, startingCoordinates.frontRight.y),
+      limbs.rearLeft.moveTo(startingCoordinates.rearLeft.x - 20, startingCoordinates.rearLeft.y),
     ]);
+    return startingCoordinates;
   },
-  (_, limbs) => {
-    return Promise.all([
-      limbs.frontLeft.moveLeg("DOWN", 4),
-      limbs.rearRight.moveLeg("DOWN", 4),
+  async (_, limbs, __, startingCoordinates) => {
+    await Promise.all([
+      limbs.frontLeft.moveTo(startingCoordinates.frontLeft.x - 10, startingCoordinates.frontLeft.y),
+      limbs.rearRight.moveTo(startingCoordinates.rearRight.x - 10, startingCoordinates.rearRight.y),
+      limbs.frontRight.moveTo(startingCoordinates.frontRight.x - 10, startingCoordinates.frontRight.y - 3),
+      limbs.rearLeft.moveTo(startingCoordinates.rearLeft.x - 10, startingCoordinates.rearLeft.y - 3),
     ]);
+    return startingCoordinates;
   },
-  (_, limbs) => {
-    return Promise.all([
-      limbs.frontRight.moveLeg("UP", 4),
-      limbs.rearLeft.moveLeg("UP", 4),
+  async (_, limbs, __, startingCoordinates) => {
+    await Promise.all([
+      limbs.frontLeft.moveTo(startingCoordinates.frontLeft.x, startingCoordinates.frontLeft.y),
+      limbs.rearRight.moveTo(startingCoordinates.rearRight.x, startingCoordinates.rearRight.y),
+      limbs.frontRight.moveTo(startingCoordinates.frontRight.x, startingCoordinates.frontRight.y),
+      limbs.rearLeft.moveTo(startingCoordinates.rearLeft.x, startingCoordinates.rearLeft.y),
     ]);
-  },
-  (_, limbs) => {
-    return Promise.all([
-      limbs.frontRight.moveLeg("FORWARD", 4),
-      limbs.rearLeft.moveLeg("FORWARD", 4),
-    ]);
-  },
-  (_, limbs) => {
-    return Promise.all([
-      limbs.frontRight.moveLeg("DOWN", 4),
-      limbs.rearLeft.moveLeg("DOWN", 4),
-    ]);
+    return startingCoordinates;
   },
 ];

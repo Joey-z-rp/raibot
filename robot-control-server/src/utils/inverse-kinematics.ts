@@ -86,8 +86,10 @@ export const convertCoordinateToAngle = ({
   x: number;
   y: number;
 }) => {
-  const thirdSideLength = calculateThirdSide(x, y, 90);
-  const angleBetweenThirdSideAndX = radiansToDegrees(Math.atan(y / x));
+  const isXNegative = x < 0;
+  const xToUse = Math.abs(x)
+  const thirdSideLength = calculateThirdSide(xToUse, y, 90);
+  const angleBetweenThirdSideAndX = radiansToDegrees(Math.atan(y / xToUse));
   const lowerAngle = calculateAngleFromSides(
     thirdSideLength,
     lowerLength,
@@ -99,8 +101,9 @@ export const convertCoordinateToAngle = ({
     thirdSideLength
   );
 
-  const upperAngle =
-    angleBetweenThirdSideAndX + angleBetweenThirdSideAndUpperLeg;
+  const upperAngle = !isXNegative ?
+    angleBetweenThirdSideAndX + angleBetweenThirdSideAndUpperLeg :
+    180 - angleBetweenThirdSideAndX + angleBetweenThirdSideAndUpperLeg;
 
   return { upperAngle, lowerAngle };
 };
