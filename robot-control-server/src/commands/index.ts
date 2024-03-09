@@ -1,10 +1,12 @@
 import { Command, CommandObject } from "../command-interface";
 import { move } from "./move";
+import { moveLeg } from "./move-leg";
 import { savePosture } from "./save-posture";
 import { turnToAngle } from "./turnToAngle";
 
 const commandHandlers: Record<Command, Function> = {
   MOVE: move,
+  MOVE_LEG: moveLeg,
   TURN_TO_ANGLE: turnToAngle,
   SAVE_POSTURE: savePosture,
 };

@@ -1,4 +1,4 @@
-import { Position } from "../command-interface";
+import { LegServoPosition, Position } from "../command-interface";
 
 export const positionToChannelMap: Record<Position, number> = {
   frontLeftLow: 2,
@@ -49,4 +49,27 @@ export const positionToOperationLimitMap: Record<
   frontRightHigh: { low: 20, high: 180 },
   frontRightLow: { low: 10, high: 180 },
   head: { low: 46, high: 136 },
+};
+
+export const positionToIKAngleConversionsMap: Record<
+  LegServoPosition,
+  [(actualAngle: number) => number, (iKAngle: number) => number]
+> = {
+  frontLeftLow: [
+    (actualAngle) => 184 - actualAngle,
+    (iKAngle) => 184 - iKAngle,
+  ],
+  frontLeftHigh: [(actualAngle) => actualAngle + 8, (iKAngle) => iKAngle - 8],
+  rearLeftLow: [(actualAngle) => 174 - actualAngle, (iKAngle) => 174 - iKAngle],
+  rearLeftHigh: [(actualAngle) => actualAngle - 12, (iKAngle) => iKAngle + 12],
+  rearRightHigh: [
+    (actualAngle) => 156 - actualAngle,
+    (iKAngle) => 156 - iKAngle,
+  ],
+  rearRightLow: [(actualAngle) => actualAngle + 16, (iKAngle) => iKAngle - 16],
+  frontRightHigh: [
+    (actualAngle) => 180 - actualAngle,
+    (iKAngle) => 180 - iKAngle,
+  ],
+  frontRightLow: [(actualAngle) => actualAngle + 6, (iKAngle) => iKAngle - 6],
 };

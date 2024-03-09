@@ -1,6 +1,11 @@
-import { Position } from "../command-interface";
+import {
+  LegServoPosition,
+  Position,
+  legServoPositions,
+} from "../command-interface";
 import {
   positionToChannelMap,
+  positionToIKAngleConversionsMap,
   positionToMovementDirectionMap,
 } from "./constants";
 
@@ -10,7 +15,7 @@ const BASE_MOVE_AMOUNT = 0.8; // 1 degree
 const rotateServo =
   process.platform === "darwin"
     ? (position: string, angle: number) =>
-      console.log("Rotating servo: ", { position, angle })
+        console.info("Rotating servo: ", { position, angle })
     : require("../utils/servo-driver").rotateServo;
 
 type OperationLimit = {
@@ -29,7 +34,7 @@ export class Servo {
 
   private speed: number;
 
-  private isMoving: boolean;
+  private isServoMoving: boolean;
 
   private movingTimer: NodeJS.Timeout;
 
@@ -47,23 +52,22 @@ export class Servo {
     this.operationLimit = operationLimit;
     this.position = position;
     this.speed = 6;
-    this.isMoving = false;
+    this.isServoMoving = false;
   }
 
   init() {
-    console.log(this.position, this.angle)
-    rotateServo(
-      positionToChannelMap[this.position],
-      this.angle
-    );
+    rotateServo(positionToChannelMap[this.position], this.angle);
   }
 
   turnToAngle() {
-    this.isMoving = true;
+    this.isServoMoving = true;
 
     return new Promise((res) => {
       const turn = () => {
-        const movingAmount = this.speed < 6 ? BASE_MOVE_AMOUNT * this.speed : Math.abs(this.targetAngle - this.angle);
+        const movingAmount =
+          this.speed < 6
+            ? BASE_MOVE_AMOUNT * this.speed
+            : Math.abs(this.targetAngle - this.angle);
         const movingDirection = this.targetAngle - this.angle > 0 ? 1 : -1;
         const resultingAngle = this.angle + movingAmount * movingDirection;
         const isDone =
@@ -76,12 +80,12 @@ export class Servo {
           positionToChannelMap[this.position],
           targetAngleForThisInterval
         );
-        this.angle = targetAngleForThisInterval
+        this.angle = targetAngleForThisInterval;
 
         if (!isDone) {
           this.movingTimer = setTimeout(turn, MOVE_INTERVAL);
         } else {
-          this.isMoving = false;
+          this.isServoMoving = false;
           res(undefined);
         }
       };
@@ -92,7 +96,7 @@ export class Servo {
 
   stop() {
     if (this.movingTimer) clearTimeout(this.movingTimer);
-    this.isMoving = false;
+    this.isServoMoving = false;
   }
 
   setTargetAngle(angle: number) {
@@ -100,18 +104,40 @@ export class Servo {
       return console.warn(`Angle ${angle} exceeds operation limit`);
     }
     this.targetAngle = angle;
-    this.turnToAngle();
+    return this.turnToAngle();
   }
 
   move(amount: number) {
-    if (this.isMoving) return;
+    if (this.isServoMoving) return;
 
-    this.setTargetAngle(
+    return this.setTargetAngle(
       this.angle + amount * positionToMovementDirectionMap[this.position]
     );
   }
 
+  private checkSupportIKAngle() {
+    if (!legServoPositions.includes(this.position as LegServoPosition))
+      throw new Error(
+        `The position ${this.position} doesn't support IK calculation`
+      );
+  }
+
+  convertIKAngleToAngle(iKAngle: number) {
+    this.checkSupportIKAngle();
+    return positionToIKAngleConversionsMap[this.position][1](iKAngle);
+  }
+
   get currentAngle() {
     return this.angle;
+  }
+
+  // The angle used for inverse kinematics calculation
+  get iKAngel() {
+    this.checkSupportIKAngle();
+    return positionToIKAngleConversionsMap[this.position][0](this.angle);
+  }
+
+  get isMoving() {
+    return this.isServoMoving;
   }
 }
