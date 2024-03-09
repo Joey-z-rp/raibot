@@ -100,8 +100,14 @@ export class Servo {
   }
 
   setTargetAngle(angle: number) {
-    if (angle < this.operationLimit.low || angle > this.operationLimit.high) {
-      return console.warn(`Angle ${angle} exceeds operation limit`);
+    if (
+      Number.isNaN(angle) ||
+      angle < this.operationLimit.low ||
+      angle > this.operationLimit.high
+    ) {
+      return console.warn(
+        `Angle ${angle} exceeds operation limit for ${this.position}`
+      );
     }
     this.targetAngle = angle;
     return this.turnToAngle();

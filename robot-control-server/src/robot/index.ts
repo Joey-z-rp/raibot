@@ -9,6 +9,7 @@ import {
 import { readFromJson, writeToJson } from "../utils/json-helper";
 import { positionToOperationLimitMap } from "./constants";
 import { Limb } from "./limb";
+import { RobotControl } from "./robot-control";
 import { Servo } from "./servo";
 
 const CONFIG_PATH = "./src/config/postures.json";
@@ -17,6 +18,8 @@ class Robot {
   private allServos: Record<Position, Servo>;
 
   private limbs: Record<LimbPosition, Limb>;
+
+  private robotControl: RobotControl;
 
   constructor() {
     this.allServos = positions.reduce(
@@ -45,6 +48,11 @@ class Robot {
       }),
       {} as Record<LimbPosition, Limb>
     );
+
+    this.robotControl = new RobotControl({
+      limbs: this.limbs,
+      allServos: this.allServos,
+    });
   }
 
   init() {
@@ -53,6 +61,10 @@ class Robot {
 
   get servos() {
     return this.allServos;
+  }
+
+  get control() {
+    return this.robotControl;
   }
 
   readPostures() {

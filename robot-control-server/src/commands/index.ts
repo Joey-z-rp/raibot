@@ -1,14 +1,16 @@
 import { Command, CommandObject } from "../command-interface";
 import { move } from "./move";
-import { moveLeg } from "./move-leg";
+import { performActions } from "./perform-actions";
 import { savePosture } from "./save-posture";
+import { stopActions } from "./stop-actions";
 import { turnToAngle } from "./turnToAngle";
 
 const commandHandlers: Record<Command, Function> = {
   MOVE: move,
-  MOVE_LEG: moveLeg,
   TURN_TO_ANGLE: turnToAngle,
   SAVE_POSTURE: savePosture,
+  PERFORM_ACTIONS: performActions,
+  STOP_ACTIONS: stopActions,
 };
 
 export const processCommand = (command: CommandObject) => {

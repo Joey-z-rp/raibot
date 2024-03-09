@@ -1,27 +1,22 @@
-import { LimbPosition, Position } from "./positions";
+import { Action } from "./actions";
+import { Position } from "./positions";
 
 export type Posture = "STAND" | "REST";
 
 export const availableCommands = [
   "MOVE",
-  "MOVE_LEG",
   "TURN_TO_ANGLE",
   "SAVE_POSTURE",
+  "PERFORM_ACTIONS",
+  "STOP_ACTIONS",
 ] as const;
 
 export type Command = (typeof availableCommands)[number];
-
-export type MoveLegDirection = "UP" | "DOWN" | "FORWARD" | "BACKWARD";
 
 export type CommandArguments = {
   MOVE: {
     position: Position;
     amount: number;
-  };
-  MOVE_LEG: {
-    position: LimbPosition;
-    direction: MoveLegDirection;
-    distance: number;
   };
   TURN_TO_ANGLE: {
     position: Position;
@@ -30,6 +25,10 @@ export type CommandArguments = {
   SAVE_POSTURE: {
     postureName: Posture;
   };
+  PERFORM_ACTIONS: {
+    actions: Action[];
+  };
+  STOP_ACTIONS: {};
 };
 
 export type CommandObject = {
