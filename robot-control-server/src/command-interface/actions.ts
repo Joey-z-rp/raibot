@@ -2,7 +2,12 @@ import { LimbPosition } from "./positions";
 
 export type MoveLegDirection = "UP" | "DOWN" | "FORWARD" | "BACKWARD";
 
-export const actionTypes = ["MOVE_LEG"] as const;
+export const actionTypes = [
+  "MOVE_LEG",
+  "STAND",
+  "REST",
+  "MOVE_FORWARD",
+] as const;
 
 export type ActionType = (typeof actionTypes)[number];
 
@@ -12,10 +17,13 @@ export type ActionArgs = {
     direction: MoveLegDirection;
     distance: number;
   };
+  STAND: {};
+  REST: {};
+  MOVE_FORWARD: {};
 };
 
-export type Action = {
-  type: ActionType;
-  args: ActionArgs[ActionType];
+export type Action<T extends ActionType = any> = {
+  type: T;
+  args: ActionArgs[T];
   repeat: number;
 };

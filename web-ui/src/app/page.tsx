@@ -1,6 +1,7 @@
 "use client";
 import { useRobotServer } from "@/hooks/use-robot-server";
 import { MoveLeg } from "./actions/move-leg";
+import { MovementControl } from "./actions/movement-control";
 
 export default function Home() {
   const { sendCommand } = useRobotServer();
@@ -36,6 +37,7 @@ export default function Home() {
           />
         </div>
       </div>
+      <MovementControl sendCommand={sendCommand} />
     </main>
   );
 }

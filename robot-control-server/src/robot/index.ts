@@ -21,6 +21,8 @@ class Robot {
 
   private robotControl: RobotControl;
 
+  private robotPostures: Record<Posture, Record<Position, number>>;
+
   constructor() {
     this.allServos = positions.reduce(
       (servos, position) => ({
@@ -67,6 +69,13 @@ class Robot {
     return this.robotControl;
   }
 
+  get postures() {
+    if (!this.robotPostures) {
+      this.robotPostures = this.readPostures();
+    }
+    return this.robotPostures;
+  }
+
   readPostures() {
     return readFromJson(CONFIG_PATH) as Record<
       Posture,
@@ -77,7 +86,9 @@ class Robot {
   savePosture(posture: Posture) {
     const servoAngles = this.getServoAngles();
     const postures = this.readPostures();
-    writeToJson(CONFIG_PATH, { ...postures, [posture]: servoAngles });
+    const newPostures = { ...postures, [posture]: servoAngles };
+    writeToJson(CONFIG_PATH, newPostures);
+    this.robotPostures = newPostures;
   }
 
   getServoAngles() {
