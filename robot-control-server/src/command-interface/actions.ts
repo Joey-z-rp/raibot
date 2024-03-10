@@ -7,6 +7,7 @@ export const actionTypes = [
   "STAND",
   "REST",
   "MOVE_FORWARD",
+  "MOVE_BACKWARD",
 ] as const;
 
 export type ActionType = (typeof actionTypes)[number];
@@ -20,6 +21,7 @@ export type ActionArgs = {
   STAND: {};
   REST: {};
   MOVE_FORWARD: {};
+  MOVE_BACKWARD: {};
 };
 
 export type Action<T extends ActionType = any> = {

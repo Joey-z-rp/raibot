@@ -24,11 +24,6 @@ export const MovementControl = ({
               args: {
                 actions: [
                   {
-                    type: "STAND",
-                    args: {},
-                    repeat: 1,
-                  },
-                  {
                     type: "MOVE_FORWARD",
                     args: {},
                     repeat: 1,
@@ -41,7 +36,23 @@ export const MovementControl = ({
         >
           Forward
         </ActionButton>
-        <ActionButton action={() => {}} stop={stop}>
+        <ActionButton
+          action={() =>
+            sendCommand({
+              command: "PERFORM_ACTIONS",
+              args: {
+                actions: [
+                  {
+                    type: "MOVE_BACKWARD",
+                    args: {},
+                    repeat: 1,
+                  },
+                ],
+              },
+            })
+          }
+          stop={stop}
+        >
           Backward
         </ActionButton>
         <ActionButton action={() => {}} stop={stop}>

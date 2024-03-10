@@ -7,6 +7,7 @@ import {
 import { delay } from "../../utils/delay";
 import { Limb } from "../limb";
 import { Servo } from "../servo";
+import { moveBackwardSteps } from "./move-backward";
 import { moveForwardSteps } from "./move-forward";
 import { moveLegSteps } from "./move-leg";
 import { restSteps } from "./rest";
@@ -18,6 +19,7 @@ const actionSteps: Record<ActionType, ActionStep<ActionType>[]> = {
   STAND: standSteps,
   REST: restSteps,
   MOVE_FORWARD: moveForwardSteps,
+  MOVE_BACKWARD: moveBackwardSteps,
 };
 
 export const executeAction = async (
@@ -28,6 +30,6 @@ export const executeAction = async (
   let result = undefined;
   for (const step of actionSteps[action.type]) {
     result = await step(action, limbs, allServos, result);
-    await delay(20)
+    await delay(20);
   }
 };
