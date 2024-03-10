@@ -55,11 +55,81 @@ export const MovementControl = ({
         >
           Backward
         </ActionButton>
-        <ActionButton action={() => {}} stop={stop}>
+        <ActionButton
+          action={() =>
+            sendCommand({
+              command: "PERFORM_ACTIONS",
+              args: {
+                actions: [
+                  {
+                    type: "STEP_LEFT",
+                    args: {},
+                    repeat: 1,
+                  },
+                ],
+              },
+            })
+          }
+          stop={stop}
+        >
           Step left
         </ActionButton>
-        <ActionButton action={() => {}} stop={stop}>
+        <ActionButton
+          action={() =>
+            sendCommand({
+              command: "PERFORM_ACTIONS",
+              args: {
+                actions: [
+                  {
+                    type: "STEP_RIGHT",
+                    args: {},
+                    repeat: 1,
+                  },
+                ],
+              },
+            })
+          }
+          stop={stop}
+        >
           Step right
+        </ActionButton>
+        <ActionButton
+          action={() =>
+            sendCommand({
+              command: "PERFORM_ACTIONS",
+              args: {
+                actions: [
+                  {
+                    type: "TURN_LEFT",
+                    args: {},
+                    repeat: 1,
+                  },
+                ],
+              },
+            })
+          }
+          stop={stop}
+        >
+          Turn left
+        </ActionButton>
+        <ActionButton
+          action={() =>
+            sendCommand({
+              command: "PERFORM_ACTIONS",
+              args: {
+                actions: [
+                  {
+                    type: "TURN_RIGHT",
+                    args: {},
+                    repeat: 1,
+                  },
+                ],
+              },
+            })
+          }
+          stop={stop}
+        >
+          Turn right
         </ActionButton>
       </div>
       <div className="flex gap-1">

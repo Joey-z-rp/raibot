@@ -12,6 +12,10 @@ import { moveForwardSteps } from "./move-forward";
 import { moveLegSteps } from "./move-leg";
 import { restSteps } from "./rest";
 import { standSteps } from "./stand";
+import { stepLeftSteps } from "./step-left";
+import { stepRightSteps } from "./step-right";
+import { turnLeftSteps } from "./turn-left";
+import { turnRightSteps } from "./turn-right";
 import { ActionStep } from "./types";
 
 const actionSteps: Record<ActionType, ActionStep<ActionType>[]> = {
@@ -20,6 +24,10 @@ const actionSteps: Record<ActionType, ActionStep<ActionType>[]> = {
   REST: restSteps,
   MOVE_FORWARD: moveForwardSteps,
   MOVE_BACKWARD: moveBackwardSteps,
+  STEP_LEFT: stepLeftSteps,
+  STEP_RIGHT: stepRightSteps,
+  TURN_LEFT: turnLeftSteps,
+  TURN_RIGHT: turnRightSteps,
 };
 
 export const executeAction = async (

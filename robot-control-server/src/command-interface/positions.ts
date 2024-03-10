@@ -9,16 +9,22 @@ export const legServoPositions = [
   "frontRightLow",
 ] as const;
 
-export const positions = [
-  ...legServoPositions,
+export const shoulderServoPositions = [
   "frontLeftShoulder",
   "rearLeftShoulder",
   "rearRightShoulder",
   "frontRightShoulder",
+] as const;
+
+export const positions = [
+  ...legServoPositions,
+  ...shoulderServoPositions,
   "head",
 ] as const;
 
 export type LegServoPosition = (typeof legServoPositions)[number];
+
+export type ShoulderServoPosition = (typeof shoulderServoPositions)[number];
 
 export type Position = (typeof positions)[number];
 

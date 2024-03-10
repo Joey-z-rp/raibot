@@ -1,20 +1,12 @@
-import { LimbPosition, limbPositions } from "../../command-interface";
-import { ActionStep } from "./types";
-
-type StartingCoordinates = Record<LimbPosition, { x: number; y: number }>;
+import { ActionStep, StartingCoordinates } from "./types";
+import { getStatingCoordinates } from "./utils";
 
 export const moveForwardSteps: ActionStep<
   "MOVE_FORWARD",
   StartingCoordinates
 >[] = [
   async (_, limbs) => {
-    const startingCoordinates = limbPositions.reduce(
-      (coordinates, position) => ({
-        ...coordinates,
-        [position]: limbs[position].getCurrentCoordinate(),
-      }),
-      {} as StartingCoordinates
-    );
+    const startingCoordinates = getStatingCoordinates(limbs);
     await Promise.all([
       limbs.frontLeft.moveTo(
         startingCoordinates.frontLeft.x + 10,
