@@ -1,6 +1,7 @@
 import { Action, LimbPosition, Position } from "../command-interface";
 import { delay } from "../utils/delay";
 import { executeAction } from "./actions";
+import { preActions } from "./constants";
 import { Limb } from "./limb";
 import { Servo } from "./servo";
 
@@ -42,17 +43,26 @@ export class RobotControl {
     } else {
       this.actionQueue.shift();
     }
-    await delay(20);
+    await delay(100);
     await this.executeActions();
   }
 
   performActions(actions: Action[]) {
+    const firstActionType = actions[0].type;
+    const preAction = preActions[firstActionType]
+      ? { type: preActions[firstActionType], args: {}, repeat: 1 }
+      : undefined;
     if (this.actionQueue[0]) {
-      this.actionQueue = [{ ...this.actionQueue[0], repeat: 1 }, ...actions];
+      const isDifferentAction = this.actionQueue[0].type !== firstActionType;
+      this.actionQueue = [
+        { ...this.actionQueue[0], repeat: 1 },
+        ...(isDifferentAction && preAction ? [preAction] : []),
+        ...actions,
+      ];
       return;
     }
 
-    this.actionQueue = [...actions];
+    this.actionQueue = [...(preAction ? [preAction] : []), ...actions];
     return this.executeActions();
   }
 

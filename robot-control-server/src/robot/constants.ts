@@ -1,4 +1,4 @@
-import { LegServoPosition, Position } from "../command-interface";
+import { ActionType, LegServoPosition, Position } from "../command-interface";
 
 export const positionToChannelMap: Record<Position, number> = {
   frontLeftLow: 2,
@@ -72,4 +72,13 @@ export const positionToIKAngleConversionsMap: Record<
     (iKAngle) => 184 - iKAngle,
   ],
   frontRightLow: [(actualAngle) => actualAngle + 6, (iKAngle) => iKAngle - 6],
+};
+
+export const preActions: Partial<Record<ActionType, "STAND">> = {
+  MOVE_FORWARD: "STAND",
+  MOVE_BACKWARD: "STAND",
+  STEP_LEFT: "STAND",
+  STEP_RIGHT: "STAND",
+  TURN_LEFT: "STAND",
+  TURN_RIGHT: "STAND",
 };

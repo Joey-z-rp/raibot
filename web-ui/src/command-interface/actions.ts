@@ -32,7 +32,7 @@ export type ActionArgs = {
   TURN_RIGHT: {};
 };
 
-export type Action<T extends ActionType = any> = {
+export type Action<T extends ActionType = ActionType> = {
   type: T;
   args: ActionArgs[T];
   repeat: number;
