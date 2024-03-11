@@ -15,18 +15,18 @@
         "head": 80
     },
     "STAND": {
-        "frontLeftLow": 104,
-        "frontLeftHigh": 134,
+        "frontLeftLow": 104.1907369382781,
+        "frontLeftHigh": 127.78568338309748,
+        "rearLeftLow": 90.07406569068436,
+        "rearLeftHigh": 142.52433087135182,
+        "rearRightHigh": 25.638287458722488,
+        "rearRightLow": 64.12028144602981,
+        "frontRightHigh": 46.16805904485949,
+        "frontRightLow": 75.97014457576235,
         "frontLeftShoulder": 72,
-        "rearLeftLow": 90,
-        "rearLeftHigh": 144,
         "rearLeftShoulder": 86,
         "rearRightShoulder": 80,
-        "rearRightHigh": 24,
-        "rearRightLow": 64,
         "frontRightShoulder": 86,
-        "frontRightHigh": 40,
-        "frontRightLow": 76,
         "head": 80
     }
 }

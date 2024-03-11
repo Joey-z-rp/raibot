@@ -14,49 +14,70 @@ export const stepRightSteps: ActionStep<
       const angles = getStartingShoulderAngles(allServos);
 
       await Promise.all([
-        limbs.frontLeft.moveTo(
-          coordinates.frontLeft.x,
-          coordinates.frontLeft.y - 5
-        ),
-        allServos.frontLeftShoulder.setTargetAngle(angles.frontLeftShoulder + 6),
         limbs.rearRight.moveTo(
           coordinates.rearRight.x,
-          coordinates.rearRight.y - 5
+          coordinates.rearRight.y - 3
         ),
-        allServos.rearRightShoulder.setTargetAngle(angles.rearRightShoulder + 6),
-        allServos.frontRightShoulder.setTargetAngle(
-          angles.frontRightShoulder - 6
+        allServos.rearRightShoulder.setTargetAngle(angles.rearRightShoulder + 10),
+      ]);
+      return { coordinates, angles };
+    },
+    async (_, limbs, allServos, { coordinates, angles }) => {
+      await Promise.all([
+        limbs.frontLeft.moveTo(
+          coordinates.frontLeft.x,
+          coordinates.frontLeft.y - 3
         ),
-        allServos.rearLeftShoulder.setTargetAngle(angles.rearLeftShoulder - 6),
+        allServos.frontLeftShoulder.setTargetAngle(angles.frontLeftShoulder + 10),
       ]);
       return { coordinates, angles };
     },
     async (_, limbs, allServos, { coordinates, angles }) => {
       await Promise.all([
         limbs.frontLeft.moveTo(coordinates.frontLeft.x, coordinates.frontLeft.y),
-        allServos.frontLeftShoulder.setTargetAngle(angles.frontLeftShoulder + 12),
         limbs.rearRight.moveTo(coordinates.rearRight.x, coordinates.rearRight.y),
-        allServos.rearRightShoulder.setTargetAngle(angles.rearRightShoulder + 12),
-        allServos.frontRightShoulder.setTargetAngle(
-          angles.frontRightShoulder - 12
-        ),
-        allServos.rearLeftShoulder.setTargetAngle(angles.rearLeftShoulder - 12),
       ]);
       return { coordinates, angles };
     },
     async (_, limbs, allServos, { coordinates, angles }) => {
       await Promise.all([
-        allServos.frontLeftShoulder.setTargetAngle(angles.frontLeftShoulder + 6),
-        allServos.rearRightShoulder.setTargetAngle(angles.rearRightShoulder + 6),
+        allServos.frontLeftShoulder.setTargetAngle(angles.frontLeftShoulder),
+        allServos.rearRightShoulder.setTargetAngle(angles.rearRightShoulder),
+        allServos.frontRightShoulder.setTargetAngle(
+          angles.frontRightShoulder - 10
+        ),
+        allServos.rearLeftShoulder.setTargetAngle(angles.rearLeftShoulder - 10),
+      ]);
+      return { coordinates, angles };
+    },
+
+    async (_, limbs, allServos, { coordinates, angles }) => {
+      await Promise.all([
+        limbs.rearLeft.moveTo(
+          coordinates.rearRight.x,
+          coordinates.rearRight.y - 3
+        ),
+        allServos.rearLeftShoulder.setTargetAngle(angles.rearLeftShoulder),
+      ]);
+      return { coordinates, angles };
+    },
+    async (_, limbs, allServos, { coordinates, angles }) => {
+      await Promise.all([
+        limbs.rearLeft.moveTo(
+          coordinates.rearRight.x,
+          coordinates.rearRight.y - 3
+        ),
+        allServos.rearLeftShoulder.setTargetAngle(angles.rearLeftShoulder),
+      ]);
+      return { coordinates, angles };
+    },
+    async (_, limbs, allServos, { coordinates, angles }) => {
+      await Promise.all([
         limbs.frontRight.moveTo(
           coordinates.frontRight.x,
-          coordinates.frontRight.y - 5
+          coordinates.frontRight.y - 3
         ),
-        allServos.frontRightShoulder.setTargetAngle(
-          angles.frontRightShoulder - 6
-        ),
-        limbs.rearLeft.moveTo(coordinates.rearLeft.x, coordinates.rearLeft.y - 5),
-        allServos.rearLeftShoulder.setTargetAngle(angles.rearLeftShoulder - 6),
+        allServos.frontRightShoulder.setTargetAngle(angles.frontRightShoulder),
       ]);
       return { coordinates, angles };
     },
