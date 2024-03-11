@@ -43,14 +43,14 @@ export class RobotControl {
     } else {
       this.actionQueue.shift();
     }
-    await delay(100);
+    await delay(action.delay || 100);
     await this.executeActions();
   }
 
   performActions(actions: Action[]) {
     const firstActionType = actions[0].type;
     const preAction = preActions[firstActionType]
-      ? { type: preActions[firstActionType], args: {}, repeat: 1 }
+      ? { type: preActions[firstActionType], args: {}, repeat: 1, delay: 200 }
       : undefined;
     if (this.actionQueue[0]) {
       const isDifferentAction = this.actionQueue[0].type !== firstActionType;

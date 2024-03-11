@@ -36,4 +36,5 @@ export type Action<T extends ActionType = ActionType> = {
   type: T;
   args: ActionArgs[T];
   repeat: number;
+  delay?: number;
 };
