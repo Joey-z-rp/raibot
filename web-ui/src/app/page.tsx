@@ -3,6 +3,7 @@ import { useRobotServer } from "@/hooks/use-robot-server";
 import { MoveLeg } from "./actions/move-leg";
 import { MovementControl } from "./actions/movement-control";
 import { SetSpeed } from "./actions/set-speed";
+import { LedControl } from "./actions/led-control";
 
 export default function Home() {
   const { sendCommand } = useRobotServer();
@@ -40,6 +41,7 @@ export default function Home() {
         </div>
       </div>
       <MovementControl sendCommand={sendCommand} />
+      <LedControl sendCommand={sendCommand} />
     </main>
   );
 }

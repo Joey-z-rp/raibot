@@ -3,6 +3,8 @@ import { Position } from "./positions";
 
 export type Posture = "STAND" | "REST";
 
+export type RenderLedAction = "FLOW_COLOR" | "OFF";
+
 export const availableCommands = [
   "MOVE",
   "TURN_TO_ANGLE",
@@ -10,6 +12,7 @@ export const availableCommands = [
   "PERFORM_ACTIONS",
   "STOP_ACTIONS",
   "SET_SPEED",
+  "RENDER_LED",
 ] as const;
 
 export type Command = (typeof availableCommands)[number];
@@ -32,6 +35,9 @@ export type CommandArguments = {
   STOP_ACTIONS: {};
   SET_SPEED: {
     speed: number;
+  };
+  RENDER_LED: {
+    action: RenderLedAction;
   };
 };
 

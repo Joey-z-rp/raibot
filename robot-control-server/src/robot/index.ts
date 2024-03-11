@@ -8,6 +8,7 @@ import {
 } from "../command-interface";
 import { readFromJson, writeToJson } from "../utils/json-helper";
 import { positionToOperationLimitMap } from "./constants";
+import { LedControl } from "./led-control";
 import { Limb } from "./limb";
 import { RobotControl } from "./robot-control";
 import { Servo } from "./servo";
@@ -22,6 +23,8 @@ class Robot {
   private robotControl: RobotControl;
 
   private robotPostures: Record<Posture, Record<Position, number>>;
+
+  private ledControl: LedControl;
 
   private speed: number;
 
@@ -59,6 +62,7 @@ class Robot {
       limbs: this.limbs,
       allServos: this.allServos,
     });
+    this.ledControl = new LedControl();
   }
 
   init() {
@@ -78,6 +82,10 @@ class Robot {
       this.robotPostures = this.readPostures();
     }
     return this.robotPostures;
+  }
+
+  get led() {
+    return this.ledControl;
   }
 
   readPostures() {

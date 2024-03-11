@@ -1,5 +1,5 @@
 import { LimbPosition, MoveLegDirection } from "@/command-interface";
-import { ActionButton } from "@/components/ui/action-button";
+import { Button } from "@/components/ui/button";
 import { SendCommand } from "@/types/server-context";
 
 export const MoveLeg = ({
@@ -28,28 +28,15 @@ export const MoveLeg = ({
         ],
       },
     });
-  const stop = () =>
-    sendCommand({
-      command: "STOP_ACTIONS",
-      args: {},
-    });
 
   return (
     <div>
       <h2 className="text-4xl font-bold dark:text-white">{title}</h2>
       <div className="flex gap-1">
-        <ActionButton action={() => move("UP")} stop={stop}>
-          Up
-        </ActionButton>
-        <ActionButton action={() => move("DOWN")} stop={stop}>
-          Down
-        </ActionButton>
-        <ActionButton action={() => move("FORWARD")} stop={stop}>
-          Forward
-        </ActionButton>
-        <ActionButton action={() => move("BACKWARD")} stop={stop}>
-          Backward
-        </ActionButton>
+        <Button onClick={() => move("UP")}>Up</Button>
+        <Button onClick={() => move("DOWN")}>Down</Button>
+        <Button onClick={() => move("FORWARD")}>Forward</Button>
+        <Button onClick={() => move("BACKWARD")}>Backward</Button>
       </div>
     </div>
   );
