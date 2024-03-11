@@ -16,7 +16,7 @@ const BASE_MOVE_AMOUNT = 0.8; // 1 degree
 const rotateServo =
   process.platform === "darwin"
     ? (position: string, angle: number) =>
-      console.info("Rotating servo: ", { position, angle })
+        console.info("Rotating servo: ", { position, angle })
     : require("../utils/servo-driver").rotateServo;
 
 type OperationLimit = {
@@ -43,16 +43,18 @@ export class Servo {
     operationLimit,
     position,
     startingAngle,
+    speed,
   }: {
     operationLimit: OperationLimit;
     position: Position;
     startingAngle: number;
+    speed;
   }) {
     this.angle = startingAngle;
     this.targetAngle = startingAngle;
     this.operationLimit = operationLimit;
     this.position = position;
-    this.speed = 5;
+    this.speed = speed;
     this.isServoMoving = false;
   }
 
@@ -81,7 +83,7 @@ export class Servo {
           positionToChannelMap[this.position],
           targetAngleForThisInterval
         );
-        new Promise(res => setTimeout(res, TIME_TO_TURN)).then(() => {
+        new Promise((res) => setTimeout(res, TIME_TO_TURN)).then(() => {
           this.angle = targetAngleForThisInterval;
 
           if (!isDone) {
@@ -90,7 +92,7 @@ export class Servo {
             this.isServoMoving = false;
             resolve(undefined);
           }
-        })
+        });
       };
 
       turn();
@@ -134,6 +136,10 @@ export class Servo {
   convertIKAngleToAngle(iKAngle: number) {
     this.checkSupportIKAngle();
     return positionToIKAngleConversionsMap[this.position][1](iKAngle);
+  }
+
+  setSpeed(speed: number) {
+    this.speed = speed;
   }
 
   get currentAngle() {

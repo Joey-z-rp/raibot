@@ -9,6 +9,7 @@ export const availableCommands = [
   "SAVE_POSTURE",
   "PERFORM_ACTIONS",
   "STOP_ACTIONS",
+  "SET_SPEED",
 ] as const;
 
 export type Command = (typeof availableCommands)[number];
@@ -29,6 +30,9 @@ export type CommandArguments = {
     actions: Action[];
   };
   STOP_ACTIONS: {};
+  SET_SPEED: {
+    speed: number;
+  };
 };
 
 export type CommandObject = {
@@ -36,12 +40,15 @@ export type CommandObject = {
   args: CommandArguments[Command];
 };
 
-export const availableServerMessages = ["SERVO_ANGLES"] as const;
+export const availableServerMessages = ["ROBOT_STATUS"] as const;
 
 export type ServerMessage = (typeof availableServerMessages)[number];
 
 export type ServerMessageContents = {
-  SERVO_ANGLES: Record<Position, number>;
+  ROBOT_STATUS: {
+    servoAngles: Record<Position, number>;
+    speed: number;
+  };
 };
 
 export type ServerMessageObject = {

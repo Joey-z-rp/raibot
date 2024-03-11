@@ -1,9 +1,9 @@
 import { ServerMessageContents } from "@/command-interface";
 import { SetServerState } from "@/types/server-context";
 
-export const processServoAnglesMessage = (
-  content: ServerMessageContents["SERVO_ANGLES"],
+export const processRobotStatusMessage = (
+  content: ServerMessageContents["ROBOT_STATUS"],
   setServerState: SetServerState
 ) => {
-  setServerState({ servoAngles: content });
+  setServerState(content);
 };

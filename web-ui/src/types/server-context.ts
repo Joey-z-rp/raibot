@@ -14,8 +14,9 @@ export type ServerContext = {
   connect: (ipAddress: string) => void;
   sendCommand: SendCommand;
   servoAngles: ServoAngles;
+  speed: number;
 };
 
-export type ServerState = { servoAngles: ServoAngles };
+export type ServerState = { servoAngles: ServoAngles; speed: number };
 
 export type SetServerState = (state: ServerState) => void;

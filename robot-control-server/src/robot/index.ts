@@ -23,7 +23,10 @@ class Robot {
 
   private robotPostures: Record<Posture, Record<Position, number>>;
 
+  private speed: number;
+
   constructor() {
+    this.speed = 5;
     this.allServos = positions.reduce(
       (servos, position) => ({
         ...servos,
@@ -31,6 +34,7 @@ class Robot {
           position,
           operationLimit: positionToOperationLimitMap[position],
           startingAngle: this.readPostures()["REST"][position],
+          speed: this.speed,
         }),
       }),
       {} as Record<Position, Servo>
@@ -101,6 +105,13 @@ class Robot {
     );
   }
 
+  get status() {
+    return {
+      speed: this.speed,
+      servoAngles: this.getServoAngles(),
+    };
+  }
+
   moveLeg({
     position,
     direction,
@@ -111,6 +122,15 @@ class Robot {
     distance: number;
   }) {
     return this.limbs[position].moveLeg(direction, distance);
+  }
+
+  setSpeed(speed: number) {
+    if (speed < 1 || speed > 6)
+      return console.warn(`Speed ${speed} exceeds limit`);
+    this.speed = speed;
+    Object.values(this.allServos).forEach((servo) =>
+      servo.setSpeed(this.speed)
+    );
   }
 }
 

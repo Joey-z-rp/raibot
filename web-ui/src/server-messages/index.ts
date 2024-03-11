@@ -3,7 +3,7 @@ import {
   ServerMessageContents,
   ServerMessageObject,
 } from "@/command-interface";
-import { processServoAnglesMessage } from "./server-angles";
+import { processRobotStatusMessage } from "./robot-status";
 import { SetServerState } from "@/types/server-context";
 
 const messageHandlers: Record<
@@ -13,7 +13,7 @@ const messageHandlers: Record<
     setServerState: SetServerState
   ) => void
 > = {
-  SERVO_ANGLES: processServoAnglesMessage,
+  ROBOT_STATUS: processRobotStatusMessage,
 };
 
 export const processServerMessages = (

@@ -27,12 +27,14 @@ const RobotServerContext = createContext<ServerContext>({
   connect: () => {},
   sendCommand: () => {},
   servoAngles: defaultServoAngles,
+  speed: 5,
 });
 
 export const RobotServerProvider = ({ children }: { children: ReactNode }) => {
   const [wsServerIp, setWsServerIp] = useState<string>();
   const [serverState, setServerState] = useState<ServerState>({
     servoAngles: defaultServoAngles,
+    speed: 5,
   });
 
   const { sendJsonMessage, readyState, lastJsonMessage } = useWebSocket(
@@ -64,6 +66,7 @@ export const RobotServerProvider = ({ children }: { children: ReactNode }) => {
         connect,
         sendCommand,
         servoAngles: serverState.servoAngles,
+        speed: serverState.speed,
       }}
     >
       {children}

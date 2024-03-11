@@ -2,6 +2,7 @@
 import { useRobotServer } from "@/hooks/use-robot-server";
 import { MoveLeg } from "./actions/move-leg";
 import { MovementControl } from "./actions/movement-control";
+import { SetSpeed } from "./actions/set-speed";
 
 export default function Home() {
   const { sendCommand } = useRobotServer();
@@ -11,6 +12,7 @@ export default function Home() {
       <h1 className="mb-4 text-5xl font-extrabold dark:text-white">
         Robot Control
       </h1>
+      <SetSpeed />
       <div>
         <div className="flex">
           <MoveLeg
