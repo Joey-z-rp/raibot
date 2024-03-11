@@ -7,9 +7,9 @@ const piixelModule: {
 } =
   process.platform === "darwin"
     ? {
-        ws281x: { configure: () => {}, render: () => {} },
-        colorwheel: () => {},
-      }
+      ws281x: { configure: () => { }, render: () => { } },
+      colorwheel: () => { },
+    }
     : require("piixel");
 
 export class LedControl {
@@ -35,6 +35,8 @@ export class LedControl {
     let offset = 0;
 
     const render = () => {
+      if (!this.isOn) return this.controller.clear();
+
       const pixels = new Uint32Array(this.numOfLeds);
       offset++;
 
@@ -46,13 +48,14 @@ export class LedControl {
 
       this.controller.render(pixels);
 
-      if (this.isOn) setTimeout(render, 20);
+      setTimeout(render, 20);
     };
     render();
   }
 
   turnOff() {
     this.isOn = false;
+    this.controller.clear();
   }
 
   render(action: RenderLedAction) {
