@@ -52,7 +52,7 @@ export class Servo {
     this.targetAngle = startingAngle;
     this.operationLimit = operationLimit;
     this.position = position;
-    this.speed = 6;
+    this.speed = 5;
     this.isServoMoving = false;
   }
 
