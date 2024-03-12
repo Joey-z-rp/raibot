@@ -7,8 +7,8 @@ class MockGpio {
   trigger() {
     console.info("Trigger GPIO pin")
   }
-  on() {}
-  removeAllListeners() {}
+  on() { }
+  removeAllListeners() { }
 }
 
 const Gpio = process.platform === "darwin" ? MockGpio : require("pigpio").Gpio;
@@ -43,7 +43,7 @@ export class UltrasonicControl {
 
           const endTick = tick;
           const diff = endTick - startTick;
-          this.lastMeasurementResult = diff / 2 / MICROSECDONDS_PER_CM;
+          this.lastMeasurementResult = Math.round(diff / 2 / MICROSECDONDS_PER_CM * 10) / 10;
           res(this.lastMeasurementResult);
         }
       });
