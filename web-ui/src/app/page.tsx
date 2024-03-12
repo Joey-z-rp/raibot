@@ -4,9 +4,10 @@ import { MoveLeg } from "./actions/move-leg";
 import { MovementControl } from "./actions/movement-control";
 import { SetSpeed } from "./actions/set-speed";
 import { LedControl } from "./actions/led-control";
+import { UltrasonicControl } from "./actions/ultrasonic-control";
 
 export default function Home() {
-  const { sendCommand } = useRobotServer();
+  const { sendCommand, lastDistanceMeasurement } = useRobotServer();
 
   return (
     <main>
@@ -42,6 +43,10 @@ export default function Home() {
       </div>
       <MovementControl sendCommand={sendCommand} />
       <LedControl sendCommand={sendCommand} />
+      <UltrasonicControl
+        sendCommand={sendCommand}
+        lastDistanceMeasurement={lastDistanceMeasurement}
+      />
     </main>
   );
 }

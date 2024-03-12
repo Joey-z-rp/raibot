@@ -12,6 +12,7 @@ import { LedControl } from "./led-control";
 import { Limb } from "./limb";
 import { RobotControl } from "./robot-control";
 import { Servo } from "./servo";
+import { UltrasonicControl } from "./ultrasonic-control";
 
 const CONFIG_PATH = "./src/config/postures.json";
 
@@ -25,6 +26,8 @@ class Robot {
   private robotPostures: Record<Posture, Record<Position, number>>;
 
   private ledControl: LedControl;
+
+  private ultrasonicControl: UltrasonicControl;
 
   private speed: number;
 
@@ -63,6 +66,7 @@ class Robot {
       allServos: this.allServos,
     });
     this.ledControl = new LedControl();
+    this.ultrasonicControl = new UltrasonicControl();
   }
 
   init() {
@@ -86,6 +90,10 @@ class Robot {
 
   get led() {
     return this.ledControl;
+  }
+
+  get ultrasonic() {
+    return this.ultrasonicControl;
   }
 
   readPostures() {
@@ -117,6 +125,7 @@ class Robot {
     return {
       speed: this.speed,
       servoAngles: this.getServoAngles(),
+      lastDistanceMeasurement: this.ultrasonicControl.lastResult,
     };
   }
 

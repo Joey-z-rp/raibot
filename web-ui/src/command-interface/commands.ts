@@ -13,6 +13,7 @@ export const availableCommands = [
   "STOP_ACTIONS",
   "SET_SPEED",
   "RENDER_LED",
+  "MEASURE_DISTANCE",
 ] as const;
 
 export type Command = (typeof availableCommands)[number];
@@ -39,6 +40,7 @@ export type CommandArguments = {
   RENDER_LED: {
     action: RenderLedAction;
   };
+  MEASURE_DISTANCE: {};
 };
 
 export type CommandObject = {
@@ -54,6 +56,7 @@ export type ServerMessageContents = {
   ROBOT_STATUS: {
     servoAngles: Record<Position, number>;
     speed: number;
+    lastDistanceMeasurement: number;
   };
 };
 

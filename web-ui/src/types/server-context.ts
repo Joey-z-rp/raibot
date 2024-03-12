@@ -1,5 +1,4 @@
 import { Command, CommandArguments, Position } from "@/command-interface";
-import { MutableRefObject } from "react";
 
 export type SendCommand = <T extends Command>(params: {
   command: T;
@@ -15,8 +14,13 @@ export type ServerContext = {
   sendCommand: SendCommand;
   servoAngles: ServoAngles;
   speed: number;
+  lastDistanceMeasurement: number;
 };
 
-export type ServerState = { servoAngles: ServoAngles; speed: number };
+export type ServerState = {
+  servoAngles: ServoAngles;
+  speed: number;
+  lastDistanceMeasurement: number;
+};
 
 export type SetServerState = (state: ServerState) => void;
