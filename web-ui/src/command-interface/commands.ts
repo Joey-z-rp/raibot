@@ -5,6 +5,8 @@ export type Posture = "STAND" | "REST";
 
 export type RenderLedAction = "FLOW_COLOR" | "OFF";
 
+export type CaptureImageAction = "STILL" | "VIDEO" | "OFF";
+
 export const availableCommands = [
   "MOVE",
   "TURN_TO_ANGLE",
@@ -14,6 +16,7 @@ export const availableCommands = [
   "SET_SPEED",
   "RENDER_LED",
   "MEASURE_DISTANCE",
+  "CAPTURE_IMAGE",
 ] as const;
 
 export type Command = (typeof availableCommands)[number];
@@ -41,6 +44,9 @@ export type CommandArguments = {
     action: RenderLedAction;
   };
   MEASURE_DISTANCE: {};
+  CAPTURE_IMAGE: {
+    action: CaptureImageAction;
+  };
 };
 
 export type CommandObject = {
@@ -48,7 +54,10 @@ export type CommandObject = {
   args: CommandArguments[Command];
 };
 
-export const availableServerMessages = ["ROBOT_STATUS"] as const;
+export const availableServerMessages = [
+  "ROBOT_STATUS",
+  "CAPTURED_IMAGE",
+] as const;
 
 export type ServerMessage = (typeof availableServerMessages)[number];
 
@@ -57,6 +66,9 @@ export type ServerMessageContents = {
     servoAngles: Record<Position, number>;
     speed: number;
     lastDistanceMeasurement: number;
+  };
+  CAPTURED_IMAGE: {
+    image: string;
   };
 };
 

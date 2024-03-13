@@ -1,4 +1,5 @@
 import { Command, CommandObject } from "../command-interface";
+import { captureImage } from "./capture-image";
 import { measureDistance } from "./measure-distance";
 import { move } from "./move";
 import { performActions } from "./perform-actions";
@@ -17,6 +18,7 @@ const commandHandlers: Record<Command, Function> = {
   SET_SPEED: setSpeed,
   RENDER_LED: renderLed,
   MEASURE_DISTANCE: measureDistance,
+  CAPTURE_IMAGE: captureImage,
 };
 
 export const processCommand = (command: CommandObject) => {

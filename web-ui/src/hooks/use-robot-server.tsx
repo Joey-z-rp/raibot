@@ -11,7 +11,6 @@ import {
   createContext,
   useContext,
   useEffect,
-  useRef,
   useState,
 } from "react";
 import useWebSocket, { ReadyState } from "react-use-websocket";
@@ -31,6 +30,10 @@ const RobotServerContext = createContext<ServerContext>({
   lastDistanceMeasurement: 0,
 });
 
+const CapturedImageContext = createContext<{ image: string }>({
+  image: "",
+});
+
 export const RobotServerProvider = ({ children }: { children: ReactNode }) => {
   const [wsServerIp, setWsServerIp] = useState<string>();
   const [serverState, setServerState] = useState<ServerState>({
@@ -38,6 +41,7 @@ export const RobotServerProvider = ({ children }: { children: ReactNode }) => {
     speed: 5,
     lastDistanceMeasurement: 0,
   });
+  const [capturedImage, setCapturedImage] = useState({ image: "" });
 
   const { sendJsonMessage, readyState, lastJsonMessage } = useWebSocket(
     wsServerIp ? `ws://${wsServerIp}:8000` : null,
@@ -51,7 +55,8 @@ export const RobotServerProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     processServerMessages(
       lastJsonMessage as ServerMessageObject,
-      setServerState
+      setServerState,
+      setCapturedImage
     );
   }, [lastJsonMessage]);
 
@@ -72,7 +77,9 @@ export const RobotServerProvider = ({ children }: { children: ReactNode }) => {
         lastDistanceMeasurement: serverState.lastDistanceMeasurement,
       }}
     >
-      {children}
+      <CapturedImageContext.Provider value={capturedImage}>
+        {children}
+      </CapturedImageContext.Provider>
     </RobotServerContext.Provider>
   );
 };
@@ -80,4 +87,9 @@ export const RobotServerProvider = ({ children }: { children: ReactNode }) => {
 export const useRobotServer = () => {
   const context = useContext(RobotServerContext);
   return context;
+};
+
+export const useCapturedImage = () => {
+  const { image } = useContext(CapturedImageContext);
+  return image;
 };

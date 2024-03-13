@@ -24,3 +24,4 @@ export type ServerState = {
 };
 
 export type SetServerState = (state: ServerState) => void;
+export type SetCapturedImage = ({ image }: { image: string }) => void;

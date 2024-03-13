@@ -5,6 +5,7 @@ export const Navigation = () => {
     <nav className="flex gap-2">
       <Link href="/">Control</Link>
       <Link href="/calibration">Calibration</Link>
+      <Link href="/camera">Camera</Link>
     </nav>
   );
 };

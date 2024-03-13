@@ -7,6 +7,7 @@ import {
   positions,
 } from "../command-interface";
 import { readFromJson, writeToJson } from "../utils/json-helper";
+import { CameraControl } from "./camera-control";
 import { positionToOperationLimitMap } from "./constants";
 import { LedControl } from "./led-control";
 import { Limb } from "./limb";
@@ -28,6 +29,8 @@ class Robot {
   private ledControl: LedControl;
 
   private ultrasonicControl: UltrasonicControl;
+
+  private cameraControl: CameraControl;
 
   private speed: number;
 
@@ -67,6 +70,7 @@ class Robot {
     });
     this.ledControl = new LedControl();
     this.ultrasonicControl = new UltrasonicControl();
+    this.cameraControl = new CameraControl();
   }
 
   init() {
@@ -94,6 +98,10 @@ class Robot {
 
   get ultrasonic() {
     return this.ultrasonicControl;
+  }
+
+  get camera() {
+    return this.cameraControl;
   }
 
   readPostures() {

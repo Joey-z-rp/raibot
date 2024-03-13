@@ -2,7 +2,7 @@ import { WebSocketServer, WebSocket } from "ws";
 import { networkInterfaces } from "os";
 import { createServer } from "http";
 import { processCommand } from "./commands";
-import { sendRobotStatus } from "./messages";
+import { initialiseMessageSender } from "./messages";
 
 const server = createServer();
 const wsServer = new WebSocketServer({ server });
@@ -20,5 +20,5 @@ wsServer.on("connection", (connection) => {
   currentConnection.on("message", (message) => {
     processCommand(JSON.parse(message.toString()));
   });
-  sendRobotStatus(connection);
+  initialiseMessageSender(connection);
 });
