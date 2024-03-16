@@ -4,7 +4,7 @@ let isConverting = false;
 
 export const startTtsProcessor = () => {
   const processor = spawn(
-    "cd ../audio-processing && poetry run python ./text-to-speech/text-to-speech.py",
+    "cd ../audio-processing && poetry run python ./text-to-speech/text_to_speech.py",
     { shell: true }
   );
 

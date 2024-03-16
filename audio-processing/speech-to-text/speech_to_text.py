@@ -22,5 +22,5 @@ while True:
         chunk_length_s=30,
         batch_size=24,
     )
-    outputText = outputs["text"]
-    print(f"{open_marker}{outputText}{close_marker}")
+    output_text = outputs["text"]
+    print(f"{open_marker}{output_text}{close_marker}")

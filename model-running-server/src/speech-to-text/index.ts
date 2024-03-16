@@ -5,7 +5,7 @@ let isTranscribing = false;
 
 export const startSttProcessor = () => {
   const processor = spawn(
-    "cd ../audio-processing && poetry run python ./speech-to-text/speech-to-text.py",
+    "cd ../audio-processing && poetry run python ./speech-to-text/speech_to_text.py",
     { shell: true }
   );
 
