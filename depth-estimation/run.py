@@ -269,10 +269,12 @@ if __name__ == "__main__":
     if args.model_weights is None:
         args.model_weights = default_models[args.model_type]
 
-    # set torch options
-    torch.backends.cudnn.enabled = True
-    torch.backends.cudnn.benchmark = True
+    os.environ['PYTORCH_ENABLE_MPS_FALLBACK'] = '1'
 
+    start_time = time.time()
     # compute depth maps
     run(args.input_path, args.output_path, args.model_weights, args.model_type, args.optimize, args.side, args.height,
         args.square, args.grayscale)
+    end_time = time.time()
+    elapsed_time = end_time - start_time
+    print("Elapsed time:", elapsed_time, "seconds")
