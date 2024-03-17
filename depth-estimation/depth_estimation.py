@@ -1,4 +1,3 @@
-import os
 from typing import TypedDict, List
 import torch
 import utils
@@ -8,7 +7,10 @@ from midas.model_loader import default_models, load_model
 from run import process
 from calculate_distances import Object, calculate_distances
 
-device = torch.device("mps")
+open_marker = "<depth-estimation-output>"
+close_marker = "</depth-estimation-output>"
+
+device = torch.device("cpu")
 model_type = "dpt_swin2_large_384"
 model_path = default_models[model_type]
 model, transform, net_w, net_h = load_model(
@@ -48,7 +50,7 @@ while True:
     distances = calculate_distances(
         prediction, inputData["reference_distance"], inputData["objects"]
     )
-    print(distances)
+    print(f"{open_marker}{json.dumps(distances)}{close_marker}")
 
     end_time = time.time()
     elapsed_time = end_time - start_time

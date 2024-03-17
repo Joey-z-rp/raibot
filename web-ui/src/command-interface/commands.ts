@@ -17,6 +17,7 @@ export const availableCommands = [
   "RENDER_LED",
   "MEASURE_DISTANCE",
   "CAPTURE_IMAGE",
+  "GET_ENV_UPDATES",
 ] as const;
 
 export type Command = (typeof availableCommands)[number];
@@ -47,32 +48,10 @@ export type CommandArguments = {
   CAPTURE_IMAGE: {
     action: CaptureImageAction;
   };
+  GET_ENV_UPDATES: {};
 };
 
 export type CommandObject = {
   command: Command;
   args: CommandArguments[Command];
-};
-
-export const availableServerMessages = [
-  "ROBOT_STATUS",
-  "CAPTURED_IMAGE",
-] as const;
-
-export type ServerMessage = (typeof availableServerMessages)[number];
-
-export type ServerMessageContents = {
-  ROBOT_STATUS: {
-    servoAngles: Record<Position, number>;
-    speed: number;
-    lastDistanceMeasurement: number;
-  };
-  CAPTURED_IMAGE: {
-    image: string;
-  };
-};
-
-export type ServerMessageObject = {
-  type: ServerMessage;
-  content: ServerMessageContents[ServerMessage];
 };

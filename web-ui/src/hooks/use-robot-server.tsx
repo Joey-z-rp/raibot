@@ -1,6 +1,10 @@
 "use client";
-import { Position, ServerMessageObject, positions } from "@/command-interface";
-import { processServerMessages } from "@/server-messages";
+import {
+  Position,
+  RobotServerMessageObject,
+  positions,
+} from "@/command-interface";
+import { processRobotServerMessages } from "@/robot-server-messages";
 import {
   SendCommand,
   ServerContext,
@@ -53,8 +57,8 @@ export const RobotServerProvider = ({ children }: { children: ReactNode }) => {
   );
 
   useEffect(() => {
-    processServerMessages(
-      lastJsonMessage as ServerMessageObject,
+    processRobotServerMessages(
+      lastJsonMessage as RobotServerMessageObject,
       setServerState,
       setCapturedImage
     );

@@ -2,10 +2,12 @@ import { CommandArguments } from "../command-interface";
 import { sendImage } from "../messages";
 import { robot } from "../robot";
 
-export const captureImage = ({ action }: CommandArguments["CAPTURE_IMAGE"]) => {
+export const captureImage = async ({
+  action,
+}: CommandArguments["CAPTURE_IMAGE"]) => {
   switch (action) {
     case "STILL":
-      return robot.camera.captureImage(sendImage);
+      return sendImage(await robot.camera.captureImage());
     case "VIDEO":
       return robot.camera.captureVideo(sendImage);
     case "OFF":

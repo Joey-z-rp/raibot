@@ -1,25 +1,26 @@
 import {
-  ServerMessage,
-  ServerMessageContents,
-  ServerMessageObject,
+  RobotServerMessage,
+  RobotServerMessageContents,
+  RobotServerMessageObject,
 } from "@/command-interface";
 import { processRobotStatusMessage } from "./robot-status";
 import { SetCapturedImage, SetServerState } from "@/types/server-context";
 import { processCapturedImageMessage } from "./captured-image";
 
-type MessageHandler<T extends ServerMessage = ServerMessage> = (
-  content: ServerMessageContents[T],
+type MessageHandler<T extends RobotServerMessage = RobotServerMessage> = (
+  content: RobotServerMessageContents[T],
   setServerState: SetServerState,
   setCapturedImage: SetCapturedImage
 ) => void;
 
-const messageHandlers: Record<ServerMessage, MessageHandler> = {
+const messageHandlers: Record<RobotServerMessage, MessageHandler> = {
   ROBOT_STATUS: processRobotStatusMessage as MessageHandler,
   CAPTURED_IMAGE: processCapturedImageMessage as MessageHandler,
+  ENV_UPDATES: () => {},
 };
 
-export const processServerMessages = (
-  message: ServerMessageObject | null,
+export const processRobotServerMessages = (
+  message: RobotServerMessageObject | null,
   setServerState: SetServerState,
   setCapturedImage: SetCapturedImage
 ) => {

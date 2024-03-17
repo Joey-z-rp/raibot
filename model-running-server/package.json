@@ -5,17 +5,20 @@
   "main": "index.js",
   "scripts": {
     "dev": "ts-node src/index.ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "sync": "rm -rf ./src/command-interface && cp -rf ../robot-control-server/src/command-interface ./src"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "mic": "^2.1.2",
     "sound-play": "^1.1.0",
-    "uuid": "^9.0.1"
+    "uuid": "^9.0.1",
+    "ws": "^8.16.0"
   },
   "devDependencies": {
     "@types/node": "^20.11.24",
+    "@types/ws": "^8.5.10",
     "ts-node": "^10.9.2",
     "typescript": "^5.3.3"
   }

@@ -1,5 +1,6 @@
 import { Command, CommandObject } from "../command-interface";
 import { captureImage } from "./capture-image";
+import { getEnvUpdates } from "./get-env-updates";
 import { measureDistance } from "./measure-distance";
 import { move } from "./move";
 import { performActions } from "./perform-actions";
@@ -19,6 +20,7 @@ const commandHandlers: Record<Command, Function> = {
   RENDER_LED: renderLed,
   MEASURE_DISTANCE: measureDistance,
   CAPTURE_IMAGE: captureImage,
+  GET_ENV_UPDATES: getEnvUpdates,
 };
 
 export const processCommand = (command: CommandObject) => {

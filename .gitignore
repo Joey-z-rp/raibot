@@ -160,6 +160,7 @@ cython_debug/
 #.idea/
 
 temp-audio-files
+temp-image-files
 
 node_modules
 

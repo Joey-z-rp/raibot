@@ -6,6 +6,7 @@ export const Navigation = () => {
       <Link href="/">Control</Link>
       <Link href="/calibration">Calibration</Link>
       <Link href="/camera">Camera</Link>
+      <Link href="/inspect">Inspect</Link>
     </nav>
   );
 };

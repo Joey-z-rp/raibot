@@ -16,21 +16,26 @@ export class CameraControl {
     });
   }
 
-  async captureImage(send: (data: Buffer) => void) {
+  async captureImage() {
     if (this.captureTimer) clearTimeout(this.captureTimer);
-    if (!this.cameraControl.isCapturing) await this.cameraControl.startCapture();
+    if (!this.cameraControl.isCapturing)
+      await this.cameraControl.startCapture();
     const image = await this.cameraControl.takeImage();
-    send(image);
+    return image;
   }
 
   async captureVideo(send: (data: Buffer) => void) {
     if (this.captureTimer) clearTimeout(this.captureTimer);
-    if (!this.cameraControl.isCapturing) await this.cameraControl.startCapture();
+    if (!this.cameraControl.isCapturing)
+      await this.cameraControl.startCapture();
 
     const capture = async () => {
       const image = await this.cameraControl.takeImage();
       send(image);
-      this.captureTimer = setTimeout(capture, Math.floor(1000 / VIDEO_FRAME_RATE));
+      this.captureTimer = setTimeout(
+        capture,
+        Math.floor(1000 / VIDEO_FRAME_RATE)
+      );
     };
     capture();
   }

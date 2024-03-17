@@ -3,6 +3,7 @@ import { startRecording, stopRecording, playAudio } from "./audio-io";
 import { startSttProcessor } from "./speech-to-text";
 import { startTtsProcessor } from "./text-to-speech";
 import { runModel } from "./language-model";
+import { initialiseWebSocket } from "./web-socket";
 
 (async () => {
   const { transcribe } = startSttProcessor();
@@ -39,3 +40,5 @@ import { runModel } from "./language-model";
 
   listen();
 })();
+
+initialiseWebSocket();
