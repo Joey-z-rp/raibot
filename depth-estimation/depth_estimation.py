@@ -10,7 +10,7 @@ from calculate_distances import Object, calculate_distances
 open_marker = "<depth-estimation-output>"
 close_marker = "</depth-estimation-output>"
 
-device = torch.device("cpu")
+device = torch.device("mps")
 model_type = "dpt_swin2_large_384"
 model_path = default_models[model_type]
 model, transform, net_w, net_h = load_model(

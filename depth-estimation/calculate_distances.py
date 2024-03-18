@@ -40,30 +40,49 @@ def sample_points(
 
 
 def calculate_distances(
-    depth_map: DepthMap, reference_distance: float, objects: List[Object]
+    depth_map: DepthMap,
+    reference_distance: float,
+    objects: List[Object],
+    isAbsolute=False,
 ):
-    width = len(depth_map[0])
-    height = len(depth_map)
+    reference_depth = None
 
-    reference_x1_percent = 0.4
-    reference_y1_percent = 0.5
-    reference_x2_percent = 0.6
-    reference_y2_percent = 0.8
+    if isAbsolute:
+        width = len(depth_map[0])
+        height = len(depth_map)
 
-    reference_coordinate = [
-        int(width * reference_x1_percent),
-        int(height * reference_y1_percent),
-        int(width * reference_x2_percent),
-        int(height * reference_y2_percent),
-    ]
+        reference_x1_percent = 0.4
+        reference_y1_percent = 0.5
+        reference_x2_percent = 0.6
+        reference_y2_percent = 0.8
 
-    reference_depth = sample_points(depth_map, reference_coordinate)
+        reference_coordinate = [
+            int(width * reference_x1_percent),
+            int(height * reference_y1_percent),
+            int(width * reference_x2_percent),
+            int(height * reference_y2_percent),
+        ]
+
+        reference_depth = sample_points(depth_map, reference_coordinate)
 
     output_distances: OutputDistances = {}
 
+    closest_depth = 0
+
     for obj in objects:
         depth = sample_points(depth_map, obj["coordinate"])
-        print(obj["name"], depth)
-        output_distances[obj["name"]] = reference_distance / depth * reference_depth
+        if depth > closest_depth:
+            closest_depth = depth
+        output_distances[obj["name"]] = (
+            round(reference_distance / depth * reference_depth, 2)
+            if isAbsolute
+            else depth
+        )
+
+    if not isAbsolute:
+        for obj in objects:
+            output_distances[obj["name"]] = round(
+                closest_depth / output_distances[obj["name"]], 2
+            )
 
     return output_distances

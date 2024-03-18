@@ -40,6 +40,7 @@ export type ModelServerMessageContents = {
       confidence: number;
       distance: number;
       coordinate: number[];
+      offCenterAngle: number;
     }[];
   };
 };

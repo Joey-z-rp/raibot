@@ -16,7 +16,7 @@ let isEstimating = false;
 const startDepthEstimationProcessor = () => {
   const processor = spawn(
     "cd ../depth-estimation && conda run --no-capture-output -n midas-py310 python depth_estimation.py",
-    { shell: true }
+    { shell: true, env: { ...process.env, PYTORCH_ENABLE_MPS_FALLBACK: "1" } }
   );
 
   processor.stderr.on("data", (data) => {

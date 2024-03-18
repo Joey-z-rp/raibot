@@ -3,7 +3,7 @@ import { Position } from "./positions";
 export const availableRobotServerMessages = [
   "ROBOT_STATUS",
   "CAPTURED_IMAGE",
-  "ENV_UPDATES"
+  "ENV_UPDATES",
 ] as const;
 
 export type RobotServerMessage = (typeof availableRobotServerMessages)[number];
@@ -18,9 +18,9 @@ export type RobotServerMessageContents = {
     image: string;
   };
   ENV_UPDATES: {
-    image: string,
+    image: string;
     referenceDistance: number;
-  }
+  };
 };
 
 export type RobotServerMessageObject = {
@@ -28,22 +28,21 @@ export type RobotServerMessageObject = {
   content: RobotServerMessageContents[RobotServerMessage];
 };
 
-export const availableModelServerMessages = [
-  "CALCULATED_ENV_UPDATES"
-] as const;
+export const availableModelServerMessages = ["CALCULATED_ENV_UPDATES"] as const;
 
 export type ModelServerMessage = (typeof availableModelServerMessages)[number];
 
 export type ModelServerMessageContents = {
   CALCULATED_ENV_UPDATES: {
-    image: string,
+    image: string;
     objects: {
       name: string;
       confidence: number;
       distance: number;
       coordinate: number[];
-    }[]
-  }
+      offCenterAngle: number;
+    }[];
+  };
 };
 
 export type ModelServerMessageObject = {

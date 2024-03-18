@@ -1,19 +1,4 @@
 import { ModelServerMessageContents } from "@/command-interface";
-import { useMemo } from "react";
-
-const getRandomColor = () => {
-  const decimalToHex = (decimal: number) => {
-    var hex = decimal.toString(16);
-    return hex.length == 1 ? "0" + hex : hex;
-  };
-
-  var r = Math.floor(Math.random() * 256);
-  var g = Math.floor(Math.random() * 256);
-  var b = Math.floor(Math.random() * 256);
-
-  var color = "#" + decimalToHex(r) + decimalToHex(g) + decimalToHex(b);
-  return color;
-};
 
 const ObjectBox = ({
   object,
@@ -25,7 +10,7 @@ const ObjectBox = ({
   const left = object.coordinate[0];
   const top = object.coordinate[1];
 
-  const borderColor = useMemo(() => getRandomColor(), [...object.coordinate]);
+  const color = "#00C3AF";
 
   return (
     <div
@@ -35,13 +20,14 @@ const ObjectBox = ({
         height,
         left,
         top,
-        borderColor,
+        borderColor: color,
       }}
     >
-      <div className="absolute flex gap-2" style={{ top: "-20px" }}>
+      <div className="absolute flex gap-2" style={{ top: "-20px", color }}>
         <span>{object.name}</span>
         <span>{Math.round(object.confidence * 100) / 100}</span>
-        <span>Distance: {Math.round(object.distance)}cm</span>
+        <span>Distance: {object.distance}</span>
+        <span>Angle: {object.offCenterAngle}</span>
       </div>
     </div>
   );
