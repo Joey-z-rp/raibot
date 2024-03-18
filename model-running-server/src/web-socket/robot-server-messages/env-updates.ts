@@ -7,11 +7,11 @@ import { TEMP_IMAGE_FOLDER_PATH } from "../../shared/constants";
 import { detect } from "../../object-detection";
 import { estimate } from "../../depth-estimation";
 
-const IMAGE_WIDTH = 640;
-const CAMERA_FOV = 110; // degree
+const IMAGE_WIDTH = 1280;
+const CAMERA_FOV = 75; // degree
 
 const calculateOffCenterAngle = (coordinate: number[]) => {
-  const coordinateCenter = coordinate[2] - coordinate[0];
+  const coordinateCenter = (coordinate[0] + coordinate[2]) / 2;
   const imageCenter = IMAGE_WIDTH / 2;
   const offCenter = coordinateCenter - imageCenter;
 
@@ -26,6 +26,7 @@ export const processEnvUpdatesMessage = async (
   writeFileSync(filePath, imageBuffer);
   const startObjectDetectionTime = performance.now();
   const detectionResults = await detect(filePath);
+  // Implement IOU filtering here
   const startDepthEstimationTime = performance.now();
   const estimationResults = await estimate({
     file_path: filePath,

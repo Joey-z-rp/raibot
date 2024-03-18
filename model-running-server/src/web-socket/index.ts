@@ -7,7 +7,7 @@ import { initialiseBrowsserMessageSender } from "./send-messages";
 let browserConnection: WebSocket | undefined;
 
 // For robot server connection
-const wsClient = new WebSocket("ws://localhost:8000", {
+const wsClient = new WebSocket("ws://192.168.0.35:8000", {
   headers: { "user-agent": "Node.js" },
 });
 

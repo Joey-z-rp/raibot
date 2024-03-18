@@ -1,3 +1,4 @@
+import math
 from typing import List, Dict, TypedDict
 import random
 
@@ -81,8 +82,9 @@ def calculate_distances(
 
     if not isAbsolute:
         for obj in objects:
-            output_distances[obj["name"]] = round(
-                closest_depth / output_distances[obj["name"]], 2
+            relative_distance = round(closest_depth / output_distances[obj["name"]], 2)
+            output_distances[obj["name"]] = (
+                9999 if (math.isinf(relative_distance)) else relative_distance
             )
 
     return output_distances

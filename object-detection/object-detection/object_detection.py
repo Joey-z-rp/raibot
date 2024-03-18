@@ -5,15 +5,17 @@ from default_target_classes import default_target_classes
 open_marker = "<object-detection-output>"
 close_marker = "</object-detection-output>"
 
-model = YOLO("yolov8s-worldv2.pt")
+model = YOLO("yolov8l-worldv2.pt")
 
 set_classes = default_target_classes
+
 
 def contains_all(original_list, new_list):
     if new_list is None:
         return True
 
     return all(item in original_list for item in new_list)
+
 
 while True:
     # Example input: PATH_TO_THE_FIEL, cat|bed|bottle
@@ -31,7 +33,7 @@ while True:
         set_classes = list(set(set_classes + filtered_target_classes))
         model.set_classes(set_classes)
 
-    results = model.predict(file_path)
+    results = model.predict(file_path, conf=0.01)
 
     names = results[0].names
     classes = results[0].boxes.cls

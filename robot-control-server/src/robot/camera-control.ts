@@ -10,8 +10,8 @@ export class CameraControl {
   constructor() {
     this.captureTimer = null;
     this.cameraControl = new StreamCamera({
-      width: 640,
-      height: 480,
+      width: 1280,
+      height: 720,
       codec: Codec.MJPEG,
     });
   }
