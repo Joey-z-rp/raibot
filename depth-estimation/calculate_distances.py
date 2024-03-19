@@ -1,6 +1,6 @@
-import math
+from math import isinf
 from typing import List, Dict, TypedDict
-import random
+from random import randint
 
 
 class Object(TypedDict):
@@ -30,8 +30,8 @@ def sample_points(
 
     points = []
     for _ in range(num_points):
-        x = random.randint(x1, x2)
-        y = random.randint(y1, y2)
+        x = randint(x1, x2)
+        y = randint(y1, y2)
         points.append((x, y))
 
     total_depth = sum(depth_map[y][x] for x, y in points)
@@ -84,7 +84,7 @@ def calculate_distances(
         for obj in objects:
             relative_distance = round(closest_depth / output_distances[obj["name"]], 2)
             output_distances[obj["name"]] = (
-                9999 if (math.isinf(relative_distance)) else relative_distance
+                9999 if (isinf(relative_distance)) else relative_distance
             )
 
     return output_distances

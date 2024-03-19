@@ -1,6 +1,7 @@
 from ultralytics import YOLO
-import json
+from json import dumps
 from default_target_classes import default_target_classes
+from non_max_suppression import perform_nms
 
 open_marker = "<object-detection-output>"
 close_marker = "</object-detection-output>"
@@ -33,7 +34,7 @@ while True:
         set_classes = list(set(set_classes + filtered_target_classes))
         model.set_classes(set_classes)
 
-    results = model.predict(file_path, conf=0.01)
+    results = model.predict(file_path, conf=0.3)
 
     names = results[0].names
     classes = results[0].boxes.cls
@@ -47,8 +48,10 @@ while True:
         detected_objects[i] = {
             "name": names[int(classes[i].item())],
             "confidence": confidences[i].item(),
-            "coordinate": coordinates[i].tolist(),
+            "coordinate": coordinates[i],
         }
-    output = json.dumps(detected_objects)
+
+    filtered_objects = perform_nms(detected_objects, iou_threshold=0.3)
+    output = dumps(filtered_objects)
 
     print(f"{open_marker}{output}{close_marker}")

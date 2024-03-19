@@ -1,4 +1,4 @@
-import { writeFileSync } from "fs";
+import { unlink, writeFileSync } from "fs";
 import { v4 } from "uuid";
 
 import { RobotServerMessageContents } from "../../command-interface";
@@ -58,4 +58,7 @@ export const processEnvUpdatesMessage = async (
     }`
   );
   // Send to LLM
+  unlink(filePath, (err) => {
+    if (err) console.error(err);
+  });
 };

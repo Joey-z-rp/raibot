@@ -10,7 +10,11 @@ export const ConnectToServer = () => {
 
   return (
     <div>
-      <input placeholder="WS server IP" ref={ipInputRef} />
+      <input
+        placeholder="WS server IP"
+        ref={ipInputRef}
+        defaultValue="192.168.0.35"
+      />
       <Button
         onClick={() =>
           ipInputRef.current?.value && connect(ipInputRef.current.value)

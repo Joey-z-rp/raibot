@@ -1,4 +1,4 @@
-import torch
+from torch import float16
 from transformers import pipeline
 from transformers.utils import is_flash_attn_2_available
 
@@ -8,7 +8,7 @@ close_marker = "</stt-output>"
 pipe = pipeline(
     "automatic-speech-recognition",
     model="openai/whisper-small",
-    torch_dtype=torch.float16,
+    torch_dtype=float16,
     device="mps",
     model_kwargs={"attn_implementation": "flash_attention_2"}
     if is_flash_attn_2_available()
