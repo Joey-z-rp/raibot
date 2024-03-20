@@ -1,4 +1,4 @@
-import { unlink, writeFileSync } from "fs";
+import { writeFileSync } from "fs";
 import { v4 } from "uuid";
 
 import { RobotServerMessageContents } from "../../command-interface";
@@ -6,6 +6,7 @@ import { sendEnvUpdates } from "../send-messages";
 import { TEMP_IMAGE_FOLDER_PATH } from "../../shared/constants";
 import { detect } from "../../object-detection";
 import { estimate } from "../../depth-estimation";
+import { deleteFile } from "../../utils";
 
 const IMAGE_WIDTH = 1280;
 const CAMERA_FOV = 75; // degree
@@ -58,7 +59,5 @@ export const processEnvUpdatesMessage = async (
     }`
   );
   // Send to LLM
-  unlink(filePath, (err) => {
-    if (err) console.error(err);
-  });
+  deleteFile(filePath);
 };

@@ -1,5 +1,5 @@
 import { spawn } from "child_process";
-import { unlink } from "fs";
+import { deleteFile } from "../utils";
 
 let isTranscribing = false;
 
@@ -29,9 +29,7 @@ export const startSttProcessor = () => {
         if (timer) clearTimeout(timer);
 
         processor.stdout.removeListener("data", processResult);
-        unlink(filePath, (err) => {
-          if (err) console.error(err);
-        });
+        deleteFile(filePath);
         isTranscribing = false;
 
         const match = result

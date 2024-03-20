@@ -1,13 +1,7 @@
 import * as mic from "mic";
-import { createWriteStream, existsSync, mkdirSync } from "fs";
+import { createWriteStream } from "fs";
 import { v4 } from "uuid";
 import { TEMP_AUDIO_FOLDER_PATH } from "../shared/constants";
-
-const createTempFolder = () => {
-  if (!existsSync(TEMP_AUDIO_FOLDER_PATH)) {
-    mkdirSync(TEMP_AUDIO_FOLDER_PATH);
-  }
-};
 
 let micInstance = null;
 
@@ -43,5 +37,3 @@ export const startRecording = () =>
 export const stopRecording = () => {
   if (micInstance) micInstance.stop();
 };
-
-createTempFolder();

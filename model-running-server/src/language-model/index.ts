@@ -15,7 +15,7 @@ const createModel = () =>
       "ollama create raibot -f ./src/language-model/Modelfile",
       { shell: true }
     );
-
+    processor.stdout.on("data", (data) => console.log(data));
     processor.on("exit", function (code) {
       if (code === 0) {
         res(undefined);

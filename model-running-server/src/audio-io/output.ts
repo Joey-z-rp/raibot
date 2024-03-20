@@ -1,14 +1,9 @@
 import { play } from "sound-play";
 import { TEMP_AUDIO_FOLDER_PATH } from "../shared/constants";
-import { unlink } from "fs";
+import { deleteFile } from "../utils";
 
-export const playAudio = (fileName: string) => {
+export const playAudio = async (fileName: string) => {
   const filePath = `${TEMP_AUDIO_FOLDER_PATH}/${fileName}`;
-  play(filePath);
-
-  setTimeout(() => {
-    unlink(filePath, (err) => {
-      if (err) console.error(err);
-    });
-  }, 5000);
+  await play(filePath);
+  deleteFile(filePath);
 };
