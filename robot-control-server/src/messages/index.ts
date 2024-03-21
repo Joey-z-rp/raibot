@@ -1,2 +1,2 @@
 export * from "./browser-messages";
-export * from "./server-messages";
+export * from "./model-server-messages";

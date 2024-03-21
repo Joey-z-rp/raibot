@@ -15,7 +15,7 @@ const createModel = () =>
       "ollama create raibot -f ./src/language-model/Modelfile",
       { shell: true }
     );
-    processor.stdout.on("data", (data) => console.log(data));
+    processor.stdout.on("data", (data) => console.info(data));
     processor.on("exit", function (code) {
       if (code === 0) {
         res(undefined);
@@ -28,8 +28,8 @@ const createModel = () =>
 let isProcessing = false;
 const messages = [];
 
-export const runModel = async () => {
-  await createModel();
+export const runModel = () => {
+  createModel();
 
   const ask = async (text: string) => {
     console.info("User: ", text);

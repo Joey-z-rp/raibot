@@ -10,7 +10,7 @@ const autoRecorder = new AutoRecorder();
 (async () => {
   const { transcribe } = startSttProcessor();
   const { convert } = startTtsProcessor();
-  const { ask } = await runModel();
+  const { ask } = runModel();
 
   const readline = createInterface({
     input: process.stdin,
@@ -29,13 +29,13 @@ const autoRecorder = new AutoRecorder();
         const audioFile = await convert(answer);
         await playAudio(audioFile);
       } else {
-        console.info("No answer. Ask another question")
+        console.info("No answer. Ask another question");
       }
       autoRecorder.startRecording(handleRecord);
-    }
+    };
 
-    autoRecorder.startAutoRecording(handleRecord)
-  }
+    autoRecorder.startAutoRecording(handleRecord);
+  };
 
   listen();
 })();

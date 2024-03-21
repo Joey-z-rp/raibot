@@ -4,6 +4,7 @@ export const availableRobotServerMessages = [
   "ROBOT_STATUS",
   "CAPTURED_IMAGE",
   "ENV_UPDATES",
+  "CHECK_AUDIO_TRIGGER",
 ] as const;
 
 export type RobotServerMessage = (typeof availableRobotServerMessages)[number];
@@ -20,6 +21,9 @@ export type RobotServerMessageContents = {
   ENV_UPDATES: {
     image: string;
     referenceDistance: number;
+  };
+  CHECK_AUDIO_TRIGGER: {
+    data: string;
   };
 };
 

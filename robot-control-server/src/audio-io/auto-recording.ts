@@ -1,15 +1,11 @@
 import * as recorder from "node-record-lpcm16";
-import { createWriteStream } from "fs";
-import { v4 } from "uuid";
-import { TEMP_AUDIO_FOLDER_PATH } from "../shared/constants";
 import { EventEmitter, Stream } from "stream";
-import { deleteFile } from "../utils";
 
 const BIT_DEPTH = 32768; // 16 bit
 const START_RECORDING_EVENT = "startRecording";
 const STOP_RECORDING_EVENT = "stopRecording";
 
-type OnRecorded = (filePath?: string) => Promise<void>;
+type OnRecorded = (audioBuffer?: Buffer) => void;
 
 export class AutoRecorder {
   private monitorStream: Stream;
@@ -88,17 +84,15 @@ export class AutoRecorder {
   }
 
   registerRecordingEvents(onRecorded: OnRecorded, noSoundTimeout = 4000) {
-    const getFilePath = () => `${TEMP_AUDIO_FOLDER_PATH}/${v4()}.wav`;
-    let filePath: string;
+    const audioChunks = [];
     let isTimeout = false;
 
     const startRecordingListener = () => {
       if (!this.isRecording) {
         this.isRecording = true;
-        filePath = getFilePath();
         this.recording = recorder.record();
         const stream = this.recording.stream();
-        stream.pipe(createWriteStream(filePath));
+        stream.on("data", (chunk: Buffer) => audioChunks.push(chunk));
 
         let isCheckingSilence = false;
         let timer: NodeJS.Timeout;
@@ -142,8 +136,7 @@ export class AutoRecorder {
       if (this.isRecording) {
         this.recording.stop();
         console.info(isTimeout ? "Recording stopped" : "Recording completed");
-        if (isTimeout) deleteFile(filePath);
-        onRecorded(isTimeout ? undefined : filePath);
+        onRecorded(isTimeout ? undefined : Buffer.concat(audioChunks));
         this.isRecording = false;
         this.event.removeListener(STOP_RECORDING_EVENT, stopRecordingListener);
       }
@@ -168,3 +161,5 @@ export class AutoRecorder {
     this.event.emit(START_RECORDING_EVENT);
   }
 }
+
+export const autoRecorder = new AutoRecorder();
