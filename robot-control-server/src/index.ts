@@ -24,6 +24,9 @@ wsServer.on("connection", (connection, req) => {
   if (isFromServer) {
     if (modelServerConnection) modelServerConnection.close();
     modelServerConnection = connection;
+    modelServerConnection.on("message", (message) => {
+      processCommand(JSON.parse(message.toString()));
+    });
     initialiseServerMessageSender(connection);
   } else {
     if (browserConnection) browserConnection.close();

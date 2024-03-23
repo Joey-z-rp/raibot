@@ -55,8 +55,8 @@ export class LedControl {
 
   private breathColor(color: number) {
     this.isOn = true;
-    const step = 0.1;
-    let brightness = 0.1;
+    const step = 0.025;
+    let brightness = 0.3;
     let direction = 1;
     const pixels = new Uint32Array(this.numOfLeds).fill(
       piixelModule.colorwheel(color)
@@ -65,13 +65,13 @@ export class LedControl {
     const render = () => {
       if (!this.isOn) return this.controller.clear();
 
-      brightness += step;
-      if (brightness >= 1 || brightness <= 0.1) {
+      brightness = Math.round((brightness + step * direction) * 1000) / 1000;
+      if (brightness >= 0.8 || brightness <= 0.3) {
         direction *= -1;
       }
       this.controller.render({ pixels, brightness });
 
-      setTimeout(render, 100);
+      setTimeout(render, 50);
     };
     render();
   }
@@ -85,8 +85,8 @@ export class LedControl {
     switch (action) {
       case "FLOW_COLOR":
         return this.flowColor();
-      case "BREATH_GREEN":
-        return this.breathColor(100);
+      case "BREATH_BLUE":
+        return this.breathColor(200);
       case "OFF":
         return this.turnOff();
     }

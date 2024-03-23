@@ -3,7 +3,7 @@ import { Position } from "./positions";
 
 export type Posture = "STAND" | "REST";
 
-export type RenderLedAction = "FLOW_COLOR" | "BREATH_GREEN" | "OFF";
+export type RenderLedAction = "FLOW_COLOR" | "BREATH_BLUE" | "OFF";
 
 export type CaptureImageAction = "STILL" | "VIDEO" | "OFF";
 
