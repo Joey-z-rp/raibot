@@ -2,6 +2,7 @@ import { WebSocket } from "ws";
 import { buildSendEnvUpdates } from "./env-updates";
 import { SendMessage } from "./types";
 import { monitorAudioInput } from "./monitor-audio-input";
+import { buildSendAudioInput } from "./audio-input";
 
 let currentConnection: WebSocket;
 
@@ -15,3 +16,5 @@ export const initialiseServerMessageSender = (connection: WebSocket) => {
 };
 
 export const sendEnvUpdates = buildSendEnvUpdates(sendMessage);
+
+export const sendAudioInput = buildSendAudioInput(sendMessage);

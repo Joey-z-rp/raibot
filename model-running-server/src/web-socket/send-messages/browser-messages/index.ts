@@ -1,10 +1,10 @@
 import { WebSocket } from "ws";
 import { getMessage } from "./utils";
-import { ModelServerMessageContents } from "../../command-interface";
+import { ModelServerMessageContents } from "../../../command-interface";
 
 let currentConnection: WebSocket;
 
-export const initialiseBrowsserMessageSender = (connection: WebSocket) => {
+export const initialiseBrowserMessageSender = (connection: WebSocket) => {
   currentConnection = connection;
 };
 

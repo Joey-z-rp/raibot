@@ -2,7 +2,10 @@ import { WebSocketServer, WebSocket } from "ws";
 import { networkInterfaces } from "os";
 import { createServer } from "http";
 import { processRobotServerMessages } from "./robot-server-messages";
-import { initialiseBrowsserMessageSender } from "./send-messages";
+import {
+  initialiseBrowserMessageSender,
+  initialiseRobotServerMessageSender,
+} from "./send-messages";
 
 let browserConnection: WebSocket | undefined;
 
@@ -23,9 +26,10 @@ export const initialiseWebSocket = () => {
   wsServer.on("connection", (connection) => {
     if (browserConnection) browserConnection.close();
     browserConnection = connection;
-    initialiseBrowsserMessageSender(connection);
+    initialiseBrowserMessageSender(connection);
   });
 
+  initialiseRobotServerMessageSender(wsClient);
   wsClient.on("message", (message) => {
     processRobotServerMessages(JSON.parse(message.toString()));
   });

@@ -7,6 +7,7 @@ import { performActions } from "./perform-actions";
 import { renderLed } from "./render-led";
 import { savePosture } from "./save-posture";
 import { setSpeed } from "./set-speed";
+import { startRecording } from "./start-recording";
 import { stopActions } from "./stop-actions";
 import { turnToAngle } from "./turnToAngle";
 
@@ -21,6 +22,7 @@ const commandHandlers: Record<Command, Function> = {
   MEASURE_DISTANCE: measureDistance,
   CAPTURE_IMAGE: captureImage,
   GET_ENV_UPDATES: getEnvUpdates,
+  START_RECORDING: startRecording,
 };
 
 export const processCommand = (command: CommandObject) => {

@@ -3,6 +3,7 @@ import {
   RobotServerMessageContents,
   RobotServerMessageObject,
 } from "../../command-interface";
+import { processAudioInputMessage } from "./audio-input";
 import { processCheckAudioTriggerMessage } from "./check-audio-trigger";
 import { processEnvUpdatesMessage } from "./env-updates";
 
@@ -15,6 +16,7 @@ const messageHandlers: Record<RobotServerMessage, MessageHandler> = {
   CAPTURED_IMAGE: () => {},
   ENV_UPDATES: processEnvUpdatesMessage,
   CHECK_AUDIO_TRIGGER: processCheckAudioTriggerMessage,
+  AUDIO_INPUT: processAudioInputMessage,
 };
 
 export const processRobotServerMessages = (

@@ -3,7 +3,7 @@ import { Position } from "./positions";
 
 export type Posture = "STAND" | "REST";
 
-export type RenderLedAction = "FLOW_COLOR" | "OFF";
+export type RenderLedAction = "FLOW_COLOR" | "BREATH_GREEN" | "OFF";
 
 export type CaptureImageAction = "STILL" | "VIDEO" | "OFF";
 
@@ -18,6 +18,7 @@ export const availableCommands = [
   "MEASURE_DISTANCE",
   "CAPTURE_IMAGE",
   "GET_ENV_UPDATES",
+  "START_RECORDING",
 ] as const;
 
 export type Command = (typeof availableCommands)[number];
@@ -49,6 +50,7 @@ export type CommandArguments = {
     action: CaptureImageAction;
   };
   GET_ENV_UPDATES: {};
+  START_RECORDING: {};
 };
 
 export type CommandObject = {

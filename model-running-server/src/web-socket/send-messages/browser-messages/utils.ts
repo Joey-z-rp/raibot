@@ -1,7 +1,7 @@
 import {
   ModelServerMessage,
   ModelServerMessageContents,
-} from "../../command-interface";
+} from "../../../command-interface";
 
 export const getMessage = <T extends ModelServerMessage>(
   type: T,

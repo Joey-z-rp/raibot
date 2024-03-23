@@ -7,9 +7,9 @@ const piixelModule: {
 } =
   process.platform === "darwin"
     ? {
-      ws281x: { configure: () => { }, render: () => { } },
-      colorwheel: () => { },
-    }
+        ws281x: { configure: () => {}, render: () => {} },
+        colorwheel: () => {},
+      }
     : require("piixel");
 
 export class LedControl {
@@ -30,7 +30,7 @@ export class LedControl {
     });
   }
 
-  flowColor() {
+  private flowColor() {
     this.isOn = true;
     let offset = 0;
 
@@ -48,12 +48,35 @@ export class LedControl {
 
       this.controller.render(pixels);
 
-      setTimeout(render, 20);
+      setTimeout(render, 100);
     };
     render();
   }
 
-  turnOff() {
+  private breathColor(color: number) {
+    this.isOn = true;
+    const step = 0.1;
+    let brightness = 0.1;
+    let direction = 1;
+    const pixels = new Uint32Array(this.numOfLeds).fill(
+      piixelModule.colorwheel(color)
+    );
+
+    const render = () => {
+      if (!this.isOn) return this.controller.clear();
+
+      brightness += step;
+      if (brightness >= 1 || brightness <= 0.1) {
+        direction *= -1;
+      }
+      this.controller.render({ pixels, brightness });
+
+      setTimeout(render, 100);
+    };
+    render();
+  }
+
+  private turnOff() {
     this.isOn = false;
     this.controller.clear();
   }
@@ -62,6 +85,8 @@ export class LedControl {
     switch (action) {
       case "FLOW_COLOR":
         return this.flowColor();
+      case "BREATH_GREEN":
+        return this.breathColor(100);
       case "OFF":
         return this.turnOff();
     }
