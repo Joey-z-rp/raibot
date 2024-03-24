@@ -1,4 +1,4 @@
-import * as recorder from "node-record-lpcm16";
+import * as recorder from "./node-record-lpcm16";
 import { EventEmitter, Stream } from "stream";
 
 const BIT_DEPTH = 32768; // 16 bit
