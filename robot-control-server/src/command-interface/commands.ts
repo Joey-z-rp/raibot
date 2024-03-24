@@ -19,6 +19,7 @@ export const availableCommands = [
   "CAPTURE_IMAGE",
   "GET_ENV_UPDATES",
   "START_RECORDING",
+  "PLAY_AUDIO",
 ] as const;
 
 export type Command = (typeof availableCommands)[number];
@@ -51,6 +52,9 @@ export type CommandArguments = {
   };
   GET_ENV_UPDATES: {};
   START_RECORDING: {};
+  PLAY_AUDIO: {
+    data: string;
+  };
 };
 
 export type CommandObject = {

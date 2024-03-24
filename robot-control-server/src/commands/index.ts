@@ -4,6 +4,7 @@ import { getEnvUpdates } from "./get-env-updates";
 import { measureDistance } from "./measure-distance";
 import { move } from "./move";
 import { performActions } from "./perform-actions";
+import { playAudio } from "./play-audio";
 import { renderLed } from "./render-led";
 import { savePosture } from "./save-posture";
 import { setSpeed } from "./set-speed";
@@ -23,6 +24,7 @@ const commandHandlers: Record<Command, Function> = {
   CAPTURE_IMAGE: captureImage,
   GET_ENV_UPDATES: getEnvUpdates,
   START_RECORDING: startRecording,
+  PLAY_AUDIO: playAudio,
 };
 
 export const processCommand = (command: CommandObject) => {

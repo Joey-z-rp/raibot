@@ -3,6 +3,7 @@ import {
   Position,
   legServoPositions,
 } from "../command-interface";
+import { isMacOs } from "../utils/platform";
 import {
   positionToChannelMap,
   positionToIKAngleConversionsMap,
@@ -13,11 +14,10 @@ const TIME_TO_TURN = 20; // The time needed for the servo to turn to the target 
 const MOVE_INTERVAL = 20; // 20ms, can't be less than TIME_TO_TURN
 const BASE_MOVE_AMOUNT = 0.8; // 1 degree
 
-const rotateServo =
-  process.platform === "darwin"
-    ? (position: string, angle: number) =>
-        console.info("Rotating servo: ", { position, angle })
-    : require("../utils/servo-driver").rotateServo;
+const rotateServo = isMacOs()
+  ? (position: string, angle: number) =>
+      console.info("Rotating servo: ", { position, angle })
+  : require("../utils/servo-driver").rotateServo;
 
 type OperationLimit = {
   high: number;

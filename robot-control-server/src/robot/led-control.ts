@@ -1,16 +1,16 @@
 import { Ws281xAPI } from "piixel";
 import { RenderLedAction } from "../command-interface";
+import { isMacOs } from "../utils/platform";
 
 const piixelModule: {
   ws281x: Ws281xAPI;
   colorwheel: (pos: number) => number;
-} =
-  process.platform === "darwin"
-    ? {
-        ws281x: { configure: () => {}, render: () => {} },
-        colorwheel: () => {},
-      }
-    : require("piixel");
+} = isMacOs()
+  ? {
+      ws281x: { configure: () => {}, render: () => {} },
+      colorwheel: () => {},
+    }
+  : require("piixel");
 
 export class LedControl {
   private controller: Ws281xAPI;

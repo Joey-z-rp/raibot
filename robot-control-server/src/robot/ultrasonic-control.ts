@@ -1,17 +1,18 @@
 import { Gpio as GpioClass } from "pigpio";
+import { isMacOs } from "../utils/platform";
 
 class MockGpio {
   digitalWrite() {
-    console.info("Digital write GPIO pin")
+    console.info("Digital write GPIO pin");
   }
   trigger() {
-    console.info("Trigger GPIO pin")
+    console.info("Trigger GPIO pin");
   }
-  on() { }
-  removeAllListeners() { }
+  on() {}
+  removeAllListeners() {}
 }
 
-const Gpio = process.platform === "darwin" ? MockGpio : require("pigpio").Gpio;
+const Gpio = isMacOs() ? MockGpio : require("pigpio").Gpio;
 
 // The number of microseconds it takes sound to travel 1cm at 20 degrees celcius
 const MICROSECDONDS_PER_CM = 1e6 / 34321;
@@ -43,7 +44,8 @@ export class UltrasonicControl {
 
           const endTick = tick;
           const diff = endTick - startTick;
-          this.lastMeasurementResult = Math.round(diff / 2 / MICROSECDONDS_PER_CM * 10) / 10;
+          this.lastMeasurementResult =
+            Math.round((diff / 2 / MICROSECDONDS_PER_CM) * 10) / 10;
           res(this.lastMeasurementResult);
         }
       });

@@ -1,6 +1,8 @@
 import { WebSocket } from "ws";
 import { SendMessage } from "./types";
 import { buildSendStartRecoding } from "./start-recording";
+import { buildSendRenderLed } from "./render-led";
+import { buildSendPlayAudio } from "./play-audio";
 
 let currentConnection: WebSocket;
 
@@ -13,3 +15,7 @@ export const initialiseRobotServerMessageSender = (connection: WebSocket) => {
 };
 
 export const sendStartRecoding = buildSendStartRecoding(sendMessage);
+
+export const sendRenderLed = buildSendRenderLed(sendMessage);
+
+export const sendPlayAudio = buildSendPlayAudio(sendMessage);
