@@ -1,10 +1,8 @@
-import { readFileSync } from "fs";
-
 import { RobotServerMessageContents } from "../../command-interface";
 import { convert } from "../../processors";
-import { sendPlayAudio, sendRenderLed } from "../send-messages";
+import { sendRenderLed } from "../send-messages";
 import { transcribeAudio } from "./utils";
-import { deleteFile } from "../../utils";
+import { playAudio } from "../../audio-io";
 
 export const processAudioInputMessage = async (
   content: RobotServerMessageContents["AUDIO_INPUT"]
@@ -16,10 +14,9 @@ export const processAudioInputMessage = async (
     // Send to LLM
     await new Promise((res) => setTimeout(res, 3000));
 
-    const audioFilePath = await convert("Hi, what can I do for you?");
-    const audioData = readFileSync(audioFilePath);
-    sendPlayAudio({ data: audioData.toString("base64") });
+    const audioFile = await convert("Hi, what can I do for you?");
+
     sendRenderLed("OFF");
-    deleteFile(audioFilePath);
+    playAudio(audioFile);
   }
 };
