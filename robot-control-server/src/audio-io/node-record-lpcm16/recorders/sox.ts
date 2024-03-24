@@ -3,7 +3,7 @@ module.exports = (options) => {
   const cmd = "sox";
 
   let args = [
-    "--default-device",
+    ...(process.platform === "darwin" ? ["--default-device"] : ["-t", "alsa", "-D", "dsnoop:2,0"]),
     "--no-show-progress", // show no progress
     "--rate",
     options.sampleRate, // sample rate
