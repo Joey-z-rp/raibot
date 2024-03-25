@@ -6,11 +6,11 @@ const piixelModule: {
   ws281x: Ws281xAPI;
   colorwheel: (pos: number) => number;
 } = isMacOs()
-  ? {
-      ws281x: { configure: () => {}, render: () => {} },
-      colorwheel: () => {},
+    ? {
+      ws281x: { configure: () => { }, render: () => { } },
+      colorwheel: () => { },
     }
-  : require("piixel");
+    : require("piixel");
 
 export class LedControl {
   private controller: Ws281xAPI;
@@ -54,12 +54,10 @@ export class LedControl {
       const pixels = new Uint32Array(this.numOfLeds);
 
       for (let i = 0; i < this.numOfLeds; i++) {
-        const brightness = Math.max(
-          0,
-          Math.cos(((i + offset) / this.numOfLeds) * Math.PI) * 0.7 + 0.3
-        );
+        const index = (i + offset) % this.numOfLeds;
+        const brightness = index === 0 ? 1 : (index - 1) / this.numOfLeds;
         pixels[i] = this.getColor(
-          (i * this.numOfLeds + offset) % 255,
+          (i + offset) % 255,
           brightness
         );
       }
