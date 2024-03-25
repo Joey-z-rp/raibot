@@ -30,6 +30,20 @@ export class LedControl {
     });
   }
 
+  private getColor(position: number, dimFactor: number) {
+    const originalColor = piixelModule.colorwheel(position);
+
+    const r = (originalColor >> 16) & 0xff;
+    const g = (originalColor >> 8) & 0xff;
+    const b = originalColor & 0xff;
+
+    const dimmedR = Math.round(r * dimFactor);
+    const dimmedG = Math.round(g * dimFactor);
+    const dimmedB = Math.round(b * dimFactor);
+
+    return (dimmedR << 16) | (dimmedG << 8) | dimmedB;
+  }
+
   private flowColor() {
     this.isOn = true;
     let offset = 0;
@@ -38,15 +52,20 @@ export class LedControl {
       if (!this.isOn) return this.controller.clear();
 
       const pixels = new Uint32Array(this.numOfLeds);
-      offset++;
 
       for (let i = 0; i < this.numOfLeds; i++) {
-        pixels[i] = piixelModule.colorwheel(
-          (i * this.numOfLeds + offset) % 255
+        const brightness = Math.max(
+          0,
+          Math.cos(((i + offset) / this.numOfLeds) * Math.PI) * 0.7 + 0.3
+        );
+        pixels[i] = this.getColor(
+          (i * this.numOfLeds + offset) % 255,
+          brightness
         );
       }
 
       this.controller.render(pixels);
+      offset++;
 
       setTimeout(render, 100);
     };
