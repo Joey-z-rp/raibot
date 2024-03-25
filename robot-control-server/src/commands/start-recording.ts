@@ -7,6 +7,6 @@ export const startRecording = async () => {
 
   autoRecorder.startRecording((audio) => {
     robot.led.render("OFF");
-    if (audio) sendAudioInput({ data: audio });
+    sendAudioInput({ data: audio });
   });
 };

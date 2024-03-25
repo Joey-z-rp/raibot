@@ -5,7 +5,7 @@ const BIT_DEPTH = 32768; // 16 bit
 const START_RECORDING_EVENT = "startRecording";
 const STOP_RECORDING_EVENT = "stopRecording";
 
-type OnRecorded = (audioBuffer?: Buffer) => void;
+type OnRecorded = (audioBuffer: Buffer | undefined) => void;
 
 export class AutoRecorder {
   private monitorStream: Stream;
