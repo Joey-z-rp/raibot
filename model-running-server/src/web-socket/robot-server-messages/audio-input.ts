@@ -1,12 +1,15 @@
 import { RobotServerMessageContents } from "../../command-interface";
 import { convert } from "../../processors";
-import { sendRenderLed } from "../send-messages";
+import { sendRenderLed, sendStartMonitoringAudioInput } from "../send-messages";
 import { transcribeAudio } from "./utils";
 import { playAudio } from "../../audio-io";
+import { robotState } from "../../robot-state";
 
 export const processAudioInputMessage = async (
   content: RobotServerMessageContents["AUDIO_INPUT"]
 ) => {
+  robotState.setIsRecording(false);
+  robotState.clearRefreshEnvTimer();
   const transcribedText = await transcribeAudio(content.data);
   if (transcribedText) {
     console.log({ transcribedText });
@@ -18,5 +21,7 @@ export const processAudioInputMessage = async (
 
     sendRenderLed("OFF");
     playAudio(audioFile);
+  } else {
+    sendStartMonitoringAudioInput();
   }
 };

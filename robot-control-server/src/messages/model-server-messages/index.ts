@@ -10,9 +10,11 @@ const sendMessage: SendMessage = (message) => {
   currentConnection.send(JSON.stringify(message));
 };
 
+export const startMonitoringAudio = () => monitorAudioInput(sendMessage);
+
 export const initialiseServerMessageSender = (connection: WebSocket) => {
   currentConnection = connection;
-  monitorAudioInput(sendMessage);
+  startMonitoringAudio();
 };
 
 export const sendEnvUpdates = buildSendEnvUpdates(sendMessage);

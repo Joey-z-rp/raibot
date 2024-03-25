@@ -3,6 +3,8 @@ import { SendMessage } from "./types";
 import { buildSendStartRecoding } from "./start-recording";
 import { buildSendRenderLed } from "./render-led";
 import { buildSendPlayAudio } from "./play-audio";
+import { buildSendGetEnvUpdates } from "./get-env-updates";
+import { buildSendStartMonitoringAudioInput } from "./start-monitoring-audio-input";
 
 let currentConnection: WebSocket;
 
@@ -19,3 +21,8 @@ export const sendStartRecoding = buildSendStartRecoding(sendMessage);
 export const sendRenderLed = buildSendRenderLed(sendMessage);
 
 export const sendPlayAudio = buildSendPlayAudio(sendMessage);
+
+export const sendGetEnvUpdates = buildSendGetEnvUpdates(sendMessage);
+
+export const sendStartMonitoringAudioInput =
+  buildSendStartMonitoringAudioInput(sendMessage);

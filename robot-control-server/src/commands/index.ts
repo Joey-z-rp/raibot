@@ -8,6 +8,7 @@ import { playAudio } from "./play-audio";
 import { renderLed } from "./render-led";
 import { savePosture } from "./save-posture";
 import { setSpeed } from "./set-speed";
+import { startMonitoringAudioInput } from "./start-monitoring-audio-input";
 import { startRecording } from "./start-recording";
 import { stopActions } from "./stop-actions";
 import { turnToAngle } from "./turnToAngle";
@@ -25,6 +26,7 @@ const commandHandlers: Record<Command, Function> = {
   GET_ENV_UPDATES: getEnvUpdates,
   START_RECORDING: startRecording,
   PLAY_AUDIO: playAudio,
+  START_MONITORING_AUDIO_INPUT: startMonitoringAudioInput,
 };
 
 export const processCommand = (command: CommandObject) => {

@@ -20,6 +20,7 @@ export const availableCommands = [
   "GET_ENV_UPDATES",
   "START_RECORDING",
   "PLAY_AUDIO",
+  "START_MONITORING_AUDIO_INPUT",
 ] as const;
 
 export type Command = (typeof availableCommands)[number];
@@ -55,6 +56,7 @@ export type CommandArguments = {
   PLAY_AUDIO: {
     data: string;
   };
+  START_MONITORING_AUDIO_INPUT: {};
 };
 
 export type CommandObject = {

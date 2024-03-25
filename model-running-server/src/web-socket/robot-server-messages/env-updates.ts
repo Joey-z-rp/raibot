@@ -2,12 +2,14 @@ import { writeFileSync } from "fs";
 import { v4 } from "uuid";
 
 import { RobotServerMessageContents } from "../../command-interface";
-import { sendEnvUpdates } from "../send-messages";
+import { sendEnvUpdates, sendGetEnvUpdates } from "../send-messages";
 import { TEMP_IMAGE_FOLDER_PATH } from "../../shared/constants";
 import { detect } from "../../object-detection";
 import { estimate } from "../../depth-estimation";
 import { deleteFile } from "../../utils";
+import { robotState } from "../../robot-state";
 
+const ENV_REFRESH_INTERVAL = 1000;
 const IMAGE_WIDTH = 1280;
 const CAMERA_FOV = 75; // degree
 
@@ -26,9 +28,10 @@ export const processEnvUpdatesMessage = async (
   const filePath = `${TEMP_IMAGE_FOLDER_PATH}/${v4()}.jpeg`;
   writeFileSync(filePath, imageBuffer);
   const startObjectDetectionTime = performance.now();
+
   const detectionResults = await detect(filePath);
-  // Implement IOU filtering here
   const startDepthEstimationTime = performance.now();
+
   const estimationResults = await estimate({
     file_path: filePath,
     reference_distance: content.referenceDistance,
@@ -38,6 +41,21 @@ export const processEnvUpdatesMessage = async (
     })),
   });
   const endDepthEstimationTime = performance.now();
+  robotState.setEnvUpdates({
+    updatedTime: Date.now(),
+    ultrasonicSensorReading: content.referenceDistance,
+    detectedObjects: detectionResults.map((r) => ({
+      name: r.name,
+      relativeDistance: estimationResults[r.name],
+      offCenterAngle: calculateOffCenterAngle(r.coordinate),
+    })),
+  });
+  if (robotState.isRecording) {
+    robotState.setRefreshEnvTimer(
+      setTimeout(sendGetEnvUpdates, ENV_REFRESH_INTERVAL)
+    );
+  }
+
   sendEnvUpdates({
     image: content.image,
     objects: detectionResults.map((r) => ({
@@ -58,6 +76,5 @@ export const processEnvUpdatesMessage = async (
       endDepthEstimationTime - startDepthEstimationTime
     }`
   );
-  // Send to LLM
   deleteFile(filePath);
 };
