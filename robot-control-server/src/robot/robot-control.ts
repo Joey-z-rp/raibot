@@ -5,6 +5,8 @@ import { preActions } from "./constants";
 import { Limb } from "./limb";
 import { Servo } from "./servo";
 
+const CHECK_REST_INTERVAL = 10000;
+
 export class RobotControl {
   private allServos: Record<Position, Servo>;
 
@@ -13,6 +15,8 @@ export class RobotControl {
   private actionQueue: Action[];
 
   private isStopping: boolean;
+
+  private checkRestTimer: NodeJS.Timeout;
 
   constructor({
     allServos,
@@ -27,7 +31,25 @@ export class RobotControl {
     this.isStopping = false;
   }
 
+  checkRest() {
+    if (this.checkRestTimer) clearTimeout(this.checkRestTimer);
+
+    this.checkRestTimer = setTimeout(() => {
+      if (!this.actionQueue.length) {
+        executeAction({
+          type: "REST",
+          args: {},
+          repeat: 1,
+        }, this.limbs, this.allServos);
+      } else {
+        this.checkRest();
+      }
+    }, CHECK_REST_INTERVAL);
+  }
+
   async executeActions() {
+    this.checkRest();
+
     if (this.isStopping) {
       this.actionQueue = [];
       this.isStopping = false;
