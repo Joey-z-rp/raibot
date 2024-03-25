@@ -33,7 +33,7 @@ class RobotState {
 
   setEnvUpdates(envUpdates: EnvUpdates) {
     if (
-      !this.robotEnvUpdates.updatedTime ||
+      !this.robotEnvUpdates?.updatedTime ||
       this.robotEnvUpdates.updatedTime < envUpdates.updatedTime
     ) {
       this.robotEnvUpdates = envUpdates;

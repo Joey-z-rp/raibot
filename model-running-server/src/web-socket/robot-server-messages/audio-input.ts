@@ -21,6 +21,7 @@ export const processAudioInputMessage = async (
 
     sendRenderLed("OFF");
     playAudio(audioFile);
+    sendStartMonitoringAudioInput();
   } else {
     sendStartMonitoringAudioInput();
   }
