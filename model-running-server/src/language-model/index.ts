@@ -1,4 +1,19 @@
 import { spawn } from "child_process";
+import { createInterface } from "readline";
+
+const getUserInput = async (): Promise<string> => {
+  const readline = createInterface({
+    input: process.stdin,
+    output: process.stdout,
+  });
+
+  return new Promise((resolve) => {
+    readline.question("Enter external response:\n", (input) => {
+      readline.close();
+      resolve(input);
+    });
+  });
+};
 
 const MESSAGE_LIMIT = 30;
 
@@ -64,5 +79,10 @@ export const runModel = () => {
     return result.message.content;
   };
 
-  return { ask };
+  const askExternal = async (input: string) => {
+    console.info(input);
+    return getUserInput();
+  };
+
+  return { ask, askExternal };
 };

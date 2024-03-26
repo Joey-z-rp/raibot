@@ -15,7 +15,7 @@ export const sendEnvUpdates = ({
   image: string;
   objects: ModelServerMessageContents["CALCULATED_ENV_UPDATES"]["objects"];
 }) => {
-  currentConnection.send(
+  currentConnection?.send(
     JSON.stringify(
       getMessage("CALCULATED_ENV_UPDATES", {
         image: `data:image/jpeg;base64, ${image}`,

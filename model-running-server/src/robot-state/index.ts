@@ -15,8 +15,19 @@ class RobotState {
 
   private refreshEnvTimer: NodeJS.Timeout;
 
+  private currentRobotTask: string;
+
   constructor() {
     this.isRecordingAudio = false;
+    this.currentRobotTask = "";
+  }
+
+  get currentTask() {
+    return this.currentRobotTask;
+  }
+
+  setCurrentTask(task: string) {
+    this.currentRobotTask = task;
   }
 
   get isRecording() {
