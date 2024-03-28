@@ -31,23 +31,27 @@ export class RobotControl {
     this.isStopping = false;
   }
 
-  checkRest() {
+  private checkRest() {
     if (this.checkRestTimer) clearTimeout(this.checkRestTimer);
 
     this.checkRestTimer = setTimeout(() => {
       if (!this.actionQueue.length) {
-        executeAction({
-          type: "REST",
-          args: {},
-          repeat: 1,
-        }, this.limbs, this.allServos);
+        executeAction(
+          {
+            type: "REST",
+            args: {},
+            repeat: 1,
+          },
+          this.limbs,
+          this.allServos
+        );
       } else {
         this.checkRest();
       }
     }, CHECK_REST_INTERVAL);
   }
 
-  async executeActions() {
+  private async executeActions() {
     this.checkRest();
 
     if (this.isStopping) {

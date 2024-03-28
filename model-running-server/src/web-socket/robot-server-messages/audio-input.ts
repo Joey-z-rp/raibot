@@ -1,6 +1,7 @@
 import { RobotServerMessageContents } from "../../command-interface";
 import { askExternal, convert } from "../../processors";
 import {
+  sendExecuteCode,
   sendRenderLed,
   sendStartMonitoringAudioInput,
   sendStartRecoding,
@@ -24,12 +25,15 @@ export const processAudioInputMessage = async (
       ultrasonicSensorReading: robotState.envUpdates.ultrasonicSensorReading,
       detectedObjects: robotState.envUpdates.detectedObjects.map((o) => ({
         name: o.name,
-        offsetCenterAngle: o.offCenterAngle,
+        offCenterAngle: o.offCenterAngle,
       })),
     };
     const answer = await askExternal(JSON.stringify(input));
 
     const parsedAnswer = JSON.parse(answer);
+
+    robotState.setCurrentTask(parsedAnswer.currentTask);
+    sendExecuteCode({ code: parsedAnswer.codeToExecute });
 
     sendRenderLed("OFF");
     if (parsedAnswer.vocalResponse) {

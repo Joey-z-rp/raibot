@@ -24,7 +24,7 @@ const startObjectDetectionProcessor = () => {
     );
   });
 
-  const detect = (filePath: string) =>
+  const detect = (filePath: string, name?: string) =>
     new Promise<DetectionResult[]>((res, rej) => {
       if (isDetecting) return rej("Another object detection is in progress");
 
@@ -51,7 +51,7 @@ const startObjectDetectionProcessor = () => {
         rej(new Error("Object detection timed out after 10s"));
       }, 10000);
 
-      processor.stdin.write(`${filePath}\n`);
+      processor.stdin.write(`${filePath}${name ? `,${name}` : ""}\n`);
     });
 
   return { detect };

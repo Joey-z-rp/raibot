@@ -1,5 +1,7 @@
 import { Command, CommandObject } from "../command-interface";
 import { captureImage } from "./capture-image";
+import { detectedObject } from "./detected-object";
+import { executeCode } from "./execute-code";
 import { getEnvUpdates } from "./get-env-updates";
 import { measureDistance } from "./measure-distance";
 import { move } from "./move";
@@ -27,6 +29,8 @@ const commandHandlers: Record<Command, Function> = {
   START_RECORDING: startRecording,
   PLAY_AUDIO: playAudio,
   START_MONITORING_AUDIO_INPUT: startMonitoringAudioInput,
+  DETECTED_OBJECT: detectedObject,
+  EXECUTE_CODE: executeCode,
 };
 
 export const processCommand = (command: CommandObject) => {
