@@ -40,7 +40,7 @@ export const processAudioInputMessage = async (
       const audioFile = await convert(parsedAnswer.vocalResponse);
       await playAudio(audioFile);
     }
-    if (parsedAnswer.expectAudioInput) {
+    if (parsedAnswer.isExpectingAudioInput) {
       sendStartRecoding();
     } else {
       sendStartMonitoringAudioInput();

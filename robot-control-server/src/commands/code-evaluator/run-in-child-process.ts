@@ -41,7 +41,7 @@ const getUltrasonicSensorReading = async () =>
 const detectObject = async (name: string) =>
   sendMessage({ type: "DETECT_OBJECT", name });
 
-const processMessage = (
+const processMessage = async (
   message:
     | EvaluateCodeMessage
     | ActionPerformedMessage
@@ -50,7 +50,7 @@ const processMessage = (
 ) => {
   switch (message.type) {
     case "EVALUATE_CODE": {
-      eval(message.code);
+      eval(`(async () => {${message.code}})()`);
       return;
     }
     case "ACTION_PERFORMED": {

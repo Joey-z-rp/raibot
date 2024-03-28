@@ -1,4 +1,4 @@
-import { spawn } from "child_process";
+import { fork } from "child_process";
 import {
   ActionPerformedMessage,
   DetectObjectMessage,
@@ -18,7 +18,7 @@ type MessageWithId<T extends any> = T & {
 };
 
 class CodeEvaluator {
-  private childProcess: ReturnType<typeof spawn>;
+  private childProcess: ReturnType<typeof fork>;
   private code: string | undefined;
 
   constructor() {
@@ -35,13 +35,13 @@ class CodeEvaluator {
     this.childProcess.send(message);
   }
 
-  private async processMessage(
+  private processMessage = async (
     message:
       | ReadyMessage
       | MessageWithId<PerformActionMessage>
       | MessageWithId<GetDistanceMessage>
       | MessageWithId<DetectObjectMessage>
-  ) {
+  ) => {
     switch (message.type) {
       case "READY": {
         this.sendMessage({
@@ -91,22 +91,22 @@ class CodeEvaluator {
   evaluate(code: string) {
     this.stop();
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       this.code = code;
-      this.childProcess = spawn("node");
+      this.childProcess = fork("src/commands/code-evaluator/run-in-child-process.js");
 
       this.childProcess.on("message", this.processMessage);
-      this.childProcess.stderr.on("data", (data) => console.info(data));
+
       this.childProcess.on("close", (code) => {
-        if (code === 0) {
+        if (!code || code === 0) {
           resolve(undefined);
         } else {
-          reject(`Child process exited with code ${code}`);
+          console.info(`Code executing child process exited with code ${code}`);
         }
       });
 
       this.childProcess.on("error", (err) => {
-        reject(err);
+        console.info(err)
       });
     });
   }
