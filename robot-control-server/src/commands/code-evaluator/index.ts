@@ -62,6 +62,7 @@ class CodeEvaluator {
           type: "ACTION_PERFORMED",
           operationId: message.operationId,
         });
+        break;
       }
       case "GET_DISTANCE": {
         const distance = await robot.ultrasonic.getDistance();
@@ -70,6 +71,7 @@ class CodeEvaluator {
           distance,
           operationId: message.operationId,
         });
+        break;
       }
       case "DETECT_OBJECT": {
         const image = await robot.camera.captureImage();
@@ -84,16 +86,19 @@ class CodeEvaluator {
           offCenterAngle,
           operationId: message.operationId,
         });
+        break;
       }
     }
-  }
+  };
 
   evaluate(code: string) {
     this.stop();
 
     return new Promise((resolve) => {
       this.code = code;
-      this.childProcess = fork("src/commands/code-evaluator/run-in-child-process.js");
+      this.childProcess = fork(
+        "src/commands/code-evaluator/run-in-child-process.js"
+      );
 
       this.childProcess.on("message", this.processMessage);
 
@@ -106,7 +111,7 @@ class CodeEvaluator {
       });
 
       this.childProcess.on("error", (err) => {
-        console.info(err)
+        console.info(err);
       });
     });
   }

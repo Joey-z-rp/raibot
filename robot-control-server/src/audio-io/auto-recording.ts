@@ -25,7 +25,7 @@ export class AutoRecorder {
     this.recentSamples = [];
   }
 
-  detectSound(data: Buffer, threshold = 0.3, consecutiveSamples = 5) {
+  detectSound(data: Buffer, threshold = 0.2, consecutiveSamples = 5) {
     const samples = new Int16Array(data.buffer);
     let consecutiveCount = 0;
 
@@ -107,7 +107,7 @@ export class AutoRecorder {
                 isTimeout = true;
                 stop();
               }, noSoundTimeout);
-            if (this.detectSound(data, 0.2)) {
+            if (this.detectSound(data, 0.15)) {
               isCheckingSilence = true;
               timer && clearTimeout(timer);
               console.info("Checking silence...");

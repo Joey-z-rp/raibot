@@ -20,7 +20,7 @@ export const processEnvUpdatesMessage = async (
       offCenterAngle: calculateOffCenterAngle(r.coordinate),
     })),
   });
-  if (robotState.isRecording) {
+  if (robotState.isRecording && !robotState.currentTask) {
     robotState.setRefreshEnvTimer(
       setTimeout(sendGetEnvUpdates, ENV_REFRESH_INTERVAL)
     );

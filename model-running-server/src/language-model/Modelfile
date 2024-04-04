@@ -33,7 +33,8 @@ type performAction = (action: "STAND" | "REST" | "MOVE_FORWARD" | "MOVE_BACKWARD
 type getUltrasonicSensorReading = () => Promise<number>;
 type detectObject = (name: string) => Promise<{ offCenterAngle: number } | void>; // This function will not move the robot
 You can only use functions mentioned above.
-The "TURN_LEFT" or "TURN_RIGHT" action cannot specify the angle to turn. You will need to turn 3 times and check the offset center angle using searchFor.
+The "TURN_LEFT" or "TURN_RIGHT" action cannot specify the angle to turn.
+You must consider the case where detectObject returns undefined. In this case, you can turn and detect object again to see if the object is detected.
 If you think there is no action to performe, set "codeToExecute" as empty string.
 Once a task is completed, give some vocal feedback.
 Output the JSON only, no explaination.

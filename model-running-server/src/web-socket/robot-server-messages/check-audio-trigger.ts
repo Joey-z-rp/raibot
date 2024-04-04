@@ -7,7 +7,7 @@ import {
 } from "../send-messages";
 import { transcribeAudio } from "./utils";
 
-const TRIGGER_WORD = "robot";
+const TRIGGER_WORD = "kitty";
 
 export const processCheckAudioTriggerMessage = async (
   content: RobotServerMessageContents["CHECK_AUDIO_TRIGGER"]
@@ -16,7 +16,7 @@ export const processCheckAudioTriggerMessage = async (
   if (transcribedText.includes(TRIGGER_WORD)) {
     robotState.setIsRecording(true);
     sendStartRecoding();
-    sendGetEnvUpdates();
+    if (!robotState.currentTask) sendGetEnvUpdates();
   } else {
     sendStartMonitoringAudioInput();
   }
