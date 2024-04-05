@@ -16,6 +16,10 @@ export type DetectObjectMessage = {
   name: string;
 };
 
+export type ClearCurrentTaskMessage = {
+  type: "CLEAR_CURRENT_TASK";
+};
+
 export type EvaluateCodeMessage = {
   type: "EVALUATE_CODE";
   code: string;

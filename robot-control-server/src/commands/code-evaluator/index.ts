@@ -1,6 +1,7 @@
 import { fork } from "child_process";
 import {
   ActionPerformedMessage,
+  ClearCurrentTaskMessage,
   DetectObjectMessage,
   DetectedObjectMessage,
   EvaluateCodeMessage,
@@ -11,7 +12,7 @@ import {
 } from "./types";
 import { robot } from "../../robot";
 import { ActionType } from "../../command-interface";
-import { sendDetectObject } from "../../messages";
+import { sendDetectObject, sendSetCurrentTask } from "../../messages";
 
 type MessageWithId<T extends any> = T & {
   operationId: string;
@@ -41,6 +42,7 @@ class CodeEvaluator {
       | MessageWithId<PerformActionMessage>
       | MessageWithId<GetDistanceMessage>
       | MessageWithId<DetectObjectMessage>
+      | ClearCurrentTaskMessage
   ) => {
     switch (message.type) {
       case "READY": {
@@ -86,6 +88,10 @@ class CodeEvaluator {
           offCenterAngle,
           operationId: message.operationId,
         });
+        break;
+      }
+      case "CLEAR_CURRENT_TASK": {
+        sendSetCurrentTask({ currentTask: "" });
         break;
       }
     }

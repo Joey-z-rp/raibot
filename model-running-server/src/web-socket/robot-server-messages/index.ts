@@ -7,6 +7,7 @@ import { processAudioInputMessage } from "./audio-input";
 import { processCheckAudioTriggerMessage } from "./check-audio-trigger";
 import { processDetectObjectMessage } from "./detect-object";
 import { processEnvUpdatesMessage } from "./env-updates";
+import { processSetCurrentTaskMessage } from "./set-current-task";
 
 type MessageHandler<T extends RobotServerMessage = RobotServerMessage> = (
   content: RobotServerMessageContents[T]
@@ -19,6 +20,7 @@ const messageHandlers: Record<RobotServerMessage, MessageHandler> = {
   CHECK_AUDIO_TRIGGER: processCheckAudioTriggerMessage,
   AUDIO_INPUT: processAudioInputMessage,
   DETECT_OBJECT: processDetectObjectMessage,
+  SET_CURRENT_TASK: processSetCurrentTaskMessage,
 };
 
 export const processRobotServerMessages = (

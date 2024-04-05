@@ -7,6 +7,7 @@ export const availableRobotServerMessages = [
   "DETECT_OBJECT",
   "CHECK_AUDIO_TRIGGER",
   "AUDIO_INPUT",
+  "SET_CURRENT_TASK",
 ] as const;
 
 export type RobotServerMessage = (typeof availableRobotServerMessages)[number];
@@ -34,6 +35,9 @@ export type RobotServerMessageContents = {
   };
   AUDIO_INPUT: {
     data: string;
+  };
+  SET_CURRENT_TASK: {
+    currentTask: string;
   };
 };
 

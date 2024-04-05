@@ -1,6 +1,7 @@
 import { v4 } from "uuid";
 import {
   ActionPerformedMessage,
+  ClearCurrentTaskMessage,
   DetectObjectMessage,
   DetectedObjectMessage,
   EvaluateCodeMessage,
@@ -18,6 +19,7 @@ const sendMessage = (
     | PerformActionMessage
     | GetDistanceMessage
     | DetectObjectMessage
+    | ClearCurrentTaskMessage
 ) => {
   const operationId = v4();
   process.send({
@@ -40,6 +42,8 @@ const getUltrasonicSensorReading = async () =>
 
 const detectObject = async (name: string) =>
   sendMessage({ type: "DETECT_OBJECT", name });
+
+const clearCurrentTask = () => sendMessage({ type: "CLEAR_CURRENT_TASK" });
 
 const processMessage = async (
   message:
