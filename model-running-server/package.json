@@ -5,13 +5,14 @@
   "main": "index.js",
   "scripts": {
     "dev": "ts-node src/index.ts",
-    "chatbot": "ts-node src/chatbox.ts",
+    "chatbot": "ts-node src/chatbot.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
     "sync": "rm -rf ./src/command-interface && cp -rf ../robot-control-server/src/command-interface ./src"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.24.3",
     "mic": "^2.1.2",
     "node-record-lpcm16": "^1.0.1",
     "sound-play": "^1.1.0",

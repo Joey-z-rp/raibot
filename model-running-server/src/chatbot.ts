@@ -10,7 +10,7 @@ const autoRecorder = new AutoRecorder();
 (async () => {
   const { transcribe } = startSttProcessor();
   const { convert } = startTtsProcessor();
-  const { ask } = runModel();
+  const { ask } = runModel("claude");
 
   const readline = createInterface({
     input: process.stdin,
@@ -26,7 +26,7 @@ const autoRecorder = new AutoRecorder();
       const transcribedText = await transcribe(filePath);
       const answer = await ask(transcribedText);
       if (answer) {
-        const audioFile = await convert(answer);
+        const audioFile = await convert(JSON.parse(answer).vocalResponse);
         await playAudio(audioFile);
       } else {
         console.info("No answer. Ask another question");

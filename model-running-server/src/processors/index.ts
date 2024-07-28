@@ -4,6 +4,6 @@ import { startTtsProcessor } from "../text-to-speech";
 
 const { transcribe } = startSttProcessor();
 const { convert } = startTtsProcessor();
-const { ask, askExternal } = runModel();
+const { ask } = runModel();
 
-export { transcribe, convert, ask, askExternal };
+export { transcribe, convert, ask };

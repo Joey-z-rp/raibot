@@ -1,5 +1,9 @@
 import { spawn } from "child_process";
 import { createInterface } from "readline";
+import Anthropic from "@anthropic-ai/sdk";
+import { systemPrompt } from "./prompt";
+
+const anthropic = new Anthropic();
 
 const getUserInput = async (): Promise<string> => {
   const readline = createInterface({
@@ -15,9 +19,9 @@ const getUserInput = async (): Promise<string> => {
   });
 };
 
-const MESSAGE_LIMIT = 30;
+const MESSAGE_LIMIT = 10;
 
-type ModelResponse = {
+type LocalModelResponse = {
   message: {
     role: "user" | "assistant";
     content: string;
@@ -43,7 +47,68 @@ const createModel = () =>
 let isProcessing = false;
 const messages = [];
 
-export const runModel = () => {
+const invokeLocal = async (text: string) => {
+  messages.push({
+    role: "user",
+    content: text,
+  });
+  const response = await fetch("http://localhost:11434/api/chat", {
+    method: "POST",
+    body: JSON.stringify({
+      model: "raibot",
+      stream: false,
+      keep_alive: "5m",
+      messages,
+    }),
+  });
+
+  const result: LocalModelResponse = await response.json();
+
+  if (!result.message) throw new Error(`Invalid response: ${result}`);
+
+  messages.push(result.message);
+
+  return result.message.content;
+};
+
+const invokeClaude = async (text: string) => {
+  messages.push({
+    role: "user",
+    content: [{ text, type: "text" }],
+  });
+
+  const result = await anthropic.messages.create({
+    model: "claude-3-5-sonnet-20240620",
+    max_tokens: 1000,
+    temperature: 0,
+    system: systemPrompt,
+    messages,
+  });
+
+  if (!(result.content[0].type === "text"))
+    throw new Error(`Invalid response: ${result}`);
+
+  const responseText = result.content[0].text;
+  messages.push({
+    role: "assistant",
+    content: [{ text: responseText, type: "text" }],
+  });
+
+  return responseText;
+};
+
+const invokeModel = (text: string, type: "local" | "claude") => {
+  switch (type) {
+    case "local":
+      return invokeLocal(text);
+    case "claude":
+      return invokeClaude(text);
+    default:
+      return invokeLocal(text);
+  }
+};
+
+export const runModel = (type: "local" | "claude" = "local") => {
   createModel();
 
   const ask = async (text: string) => {
@@ -52,37 +117,16 @@ export const runModel = () => {
       return console.warn("Previous conversation is still in progress");
 
     isProcessing = true;
-    messages.push({
-      role: "user",
-      content: text,
-    });
-    const response = await fetch("http://localhost:11434/api/chat", {
-      method: "POST",
-      body: JSON.stringify({
-        model: "raibot",
-        stream: false,
-        keep_alive: "5m",
-        messages,
-      }),
-    });
 
-    const result: ModelResponse = await response.json();
+    const response = await invokeModel(text, type);
 
-    if (!result.message) throw new Error(`Invalid response: ${result}`);
-
-    messages.push(result.message);
     if (messages.length > MESSAGE_LIMIT)
       messages.splice(messages.length - MESSAGE_LIMIT);
     isProcessing = false;
-    console.info("Response: ", result.message.content);
+    console.info("Response: ", response);
 
-    return result.message.content;
+    return response;
   };
 
-  const askExternal = async (input: string) => {
-    console.info(input);
-    return getUserInput();
-  };
-
-  return { ask, askExternal };
+  return { ask };
 };

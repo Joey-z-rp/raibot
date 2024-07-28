@@ -1,5 +1,5 @@
 import { RobotServerMessageContents } from "../../command-interface";
-import { askExternal, convert } from "../../processors";
+import { ask, convert } from "../../processors";
 import {
   sendExecuteCode,
   sendRenderLed,
@@ -28,7 +28,8 @@ export const processAudioInputMessage = async (
         offCenterAngle: o.offCenterAngle,
       })),
     };
-    const answer = await askExternal(JSON.stringify(input));
+    const answer = await ask(JSON.stringify(input));
+    if (!answer) return;
 
     const parsedAnswer = JSON.parse(answer);
 
