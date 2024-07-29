@@ -13,7 +13,7 @@ export const processCheckAudioTriggerMessage = async (
   content: RobotServerMessageContents["CHECK_AUDIO_TRIGGER"]
 ) => {
   const transcribedText = await transcribeAudio(content.data);
-  if (transcribedText.includes(TRIGGER_WORD)) {
+  if (transcribedText?.includes(TRIGGER_WORD)) {
     robotState.setIsRecording(true);
     sendStartRecoding();
     if (!robotState.currentTask) sendGetEnvUpdates();

@@ -26,6 +26,8 @@ export const processAudioInputMessage = async (
     };
 
     const answer = await ask(JSON.stringify(input), content.cameraImage);
+    sendRenderLed("OFF");
+
     if (!answer) return;
 
     const parsedAnswer = JSON.parse(answer);
@@ -33,7 +35,6 @@ export const processAudioInputMessage = async (
     robotState.setCurrentTask(parsedAnswer.currentTask);
     sendExecuteCode({ code: parsedAnswer.codeToExecute });
 
-    sendRenderLed("OFF");
     if (parsedAnswer.vocalResponse) {
       const audioFile = await convert(parsedAnswer.vocalResponse);
       await playAudio(audioFile);

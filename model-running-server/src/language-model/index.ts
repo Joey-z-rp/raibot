@@ -134,7 +134,7 @@ export const runModel = (type: "local" | "claude" = "local") => {
 
     isProcessing = true;
 
-    const response = await invokeModel({ text, type });
+    const response = await invokeModel({ text, type, image });
 
     if (messages.length > MESSAGE_LIMIT)
       messages.splice(messages.length - MESSAGE_LIMIT);
