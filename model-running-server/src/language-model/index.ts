@@ -71,10 +71,18 @@ const invokeLocal = async (text: string) => {
   return result.message.content;
 };
 
-const invokeClaude = async (text: string) => {
+const invokeClaude = async (text: string, image?: string) => {
   messages.push({
     role: "user",
-    content: [{ text, type: "text" }],
+    content: [
+      { text, type: "text" },
+      image
+        ? {
+            source: { type: "base64", data: image, media_type: "image/jpeg" },
+            type: "image",
+          }
+        : undefined,
+    ].filter(Boolean),
   });
 
   const result = await anthropic.messages.create({
@@ -97,12 +105,20 @@ const invokeClaude = async (text: string) => {
   return responseText;
 };
 
-const invokeModel = (text: string, type: "local" | "claude") => {
+const invokeModel = ({
+  text,
+  image,
+  type,
+}: {
+  text: string;
+  image?: string;
+  type: "local" | "claude";
+}) => {
   switch (type) {
     case "local":
       return invokeLocal(text);
     case "claude":
-      return invokeClaude(text);
+      return invokeClaude(text, image);
     default:
       return invokeLocal(text);
   }
@@ -111,14 +127,14 @@ const invokeModel = (text: string, type: "local" | "claude") => {
 export const runModel = (type: "local" | "claude" = "local") => {
   createModel();
 
-  const ask = async (text: string) => {
+  const ask = async (text: string, image?: string) => {
     console.info("User: ", text);
     if (isProcessing)
       return console.warn("Previous conversation is still in progress");
 
     isProcessing = true;
 
-    const response = await invokeModel(text, type);
+    const response = await invokeModel({ text, type });
 
     if (messages.length > MESSAGE_LIMIT)
       messages.splice(messages.length - MESSAGE_LIMIT);

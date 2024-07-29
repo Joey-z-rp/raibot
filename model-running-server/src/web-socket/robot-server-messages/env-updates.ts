@@ -14,11 +14,6 @@ export const processEnvUpdatesMessage = async (
   robotState.setEnvUpdates({
     updatedTime: Date.now(),
     ultrasonicSensorReading: content.referenceDistance,
-    detectedObjects: detectionResults.map((r) => ({
-      name: r.name,
-      relativeDistance: 0,
-      offCenterAngle: calculateOffCenterAngle(r.coordinate),
-    })),
   });
   if (robotState.isRecording && !robotState.currentTask) {
     robotState.setRefreshEnvTimer(

@@ -23,12 +23,9 @@ export const processAudioInputMessage = async (
       vocalCommand: transcribedText,
       currentTask: robotState.currentTask,
       ultrasonicSensorReading: robotState.envUpdates.ultrasonicSensorReading,
-      detectedObjects: robotState.envUpdates.detectedObjects.map((o) => ({
-        name: o.name,
-        offCenterAngle: o.offCenterAngle,
-      })),
     };
-    const answer = await ask(JSON.stringify(input));
+
+    const answer = await ask(JSON.stringify(input), content.cameraImage);
     if (!answer) return;
 
     const parsedAnswer = JSON.parse(answer);

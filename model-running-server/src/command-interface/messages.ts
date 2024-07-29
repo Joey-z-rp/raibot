@@ -35,6 +35,7 @@ export type RobotServerMessageContents = {
   };
   AUDIO_INPUT: {
     data: string;
+    cameraImage: string;
   };
   SET_CURRENT_TASK: {
     currentTask: string;

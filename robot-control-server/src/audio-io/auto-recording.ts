@@ -5,7 +5,7 @@ const BIT_DEPTH = 32768; // 16 bit
 const START_RECORDING_EVENT = "startRecording";
 const STOP_RECORDING_EVENT = "stopRecording";
 
-type OnRecorded = (audioBuffer: Buffer | undefined) => void;
+type OnRecorded = (audioBuffer: Buffer | undefined) => Promise<void>;
 
 export class AutoRecorder {
   private monitorStream: Stream;
@@ -132,11 +132,11 @@ export class AutoRecorder {
     };
     this.event.on(START_RECORDING_EVENT, startRecordingListener);
 
-    const stopRecordingListener = () => {
+    const stopRecordingListener = async () => {
       if (this.isRecording) {
         this.recording.stop();
         console.info(isTimeout ? "Recording stopped" : "Recording completed");
-        onRecorded(isTimeout ? undefined : Buffer.concat(audioChunks));
+        await onRecorded(isTimeout ? undefined : Buffer.concat(audioChunks));
         this.isRecording = false;
         this.event.removeListener(STOP_RECORDING_EVENT, stopRecordingListener);
       }

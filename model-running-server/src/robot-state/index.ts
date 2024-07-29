@@ -1,11 +1,6 @@
 type EnvUpdates = {
   updatedTime: number;
   ultrasonicSensorReading: number;
-  detectedObjects: {
-    name: string;
-    relativeDistance: number;
-    offCenterAngle: number;
-  }[];
 };
 
 class RobotState {
