@@ -9,7 +9,6 @@ export const startRecording = async () => {
     robot.led.render("OFF");
     sendAudioInput({
       data: audio,
-      cameraImage: (await robot.camera.captureImage()).toString("base64"),
     });
   });
 };

@@ -6,7 +6,7 @@ import {
 } from "../send-messages";
 import { transcribeAudio } from "./utils";
 
-const TRIGGER_WORD = "kitty";
+const TRIGGER_WORD = "robot";
 
 export const processCheckAudioTriggerMessage = async (
   content: RobotServerMessageContents["CHECK_AUDIO_TRIGGER"]

@@ -24,7 +24,7 @@ export const processAudioInputMessage = async (
       ultrasonicSensorReading: robotState.envUpdates.ultrasonicSensorReading,
     };
 
-    const answer = await ask(JSON.stringify(input), content.cameraImage);
+    const answer = await ask(JSON.stringify(input));
     sendRenderLed("OFF");
 
     if (!answer) return;
