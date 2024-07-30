@@ -36,7 +36,8 @@ type getUltrasonicSensorReading = () => Promise<number>;
 type getEnvUpdate = () => void;
 type clearCurrentTask = () => void;
 You MUST only use functions mentioned above.
-Use getEnvUpdate when you need the image from the camera. It will send you an input with "env-update" type and the image.
+Use getEnvUpdate when you need the image from the camera. It will send you an input with "env-update" type and the image. This function will terminate the execution flow so it can only be called last.
+You can have empty vocalResponse if you only want to execute code.
 Once a task is completed, clear the current task.
 The vocalResponse must be precise. No more than 3 sentences.
 Output the JSON only.
