@@ -14,7 +14,6 @@ export const processAudioInputMessage = async (
   content: RobotServerMessageContents["AUDIO_INPUT"]
 ) => {
   robotState.setIsRecording(false);
-  robotState.clearRefreshEnvTimer();
   const transcribedText = await transcribeAudio(content.data);
   if (transcribedText) {
     sendRenderLed("FLOW_COLOR");

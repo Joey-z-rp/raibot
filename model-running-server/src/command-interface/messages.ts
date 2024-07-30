@@ -26,6 +26,7 @@ export type RobotServerMessageContents = {
   };
   CHECK_AUDIO_TRIGGER: {
     data: string;
+    referenceDistance: number;
   };
   AUDIO_INPUT: {
     data: string;

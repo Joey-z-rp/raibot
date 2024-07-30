@@ -38,7 +38,8 @@ type clearCurrentTask = () => void;
 You MUST only use functions mentioned above.
 Use getEnvUpdate when you need the image from the camera. It will send you an input with "env-update" type and the image.
 Once a task is completed, clear the current task.
-Output the JSON only, no explaination.
+The vocalResponse must be precise. No more than 3 sentences.
+Output the JSON only.
 </requirements>
 
 <example-output>

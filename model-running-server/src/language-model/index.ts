@@ -133,7 +133,7 @@ export const runModel = (type: "local" | "claude" = "local") => {
       return console.warn("Previous conversation is still in progress");
 
     isProcessing = true;
-
+    console.info({ text, type, image: !!image });
     const response = await invokeModel({ text, type, image });
 
     if (messages.length > MESSAGE_LIMIT)
