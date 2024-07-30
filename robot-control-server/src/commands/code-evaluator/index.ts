@@ -2,17 +2,17 @@ import { fork } from "child_process";
 import {
   ActionPerformedMessage,
   ClearCurrentTaskMessage,
-  DetectObjectMessage,
-  DetectedObjectMessage,
   EvaluateCodeMessage,
   GetDistanceMessage,
+  GetEnvUpdateMessage,
   LatestDistanceMessage,
   PerformActionMessage,
   ReadyMessage,
 } from "./types";
 import { robot } from "../../robot";
 import { ActionType } from "../../command-interface";
-import { sendDetectObject, sendSetCurrentTask } from "../../messages";
+import { sendSetCurrentTask } from "../../messages";
+import { getEnvUpdates } from "../get-env-updates";
 
 type MessageWithId<T extends any> = T & {
   operationId: string;
@@ -31,7 +31,6 @@ class CodeEvaluator {
       | EvaluateCodeMessage
       | ActionPerformedMessage
       | LatestDistanceMessage
-      | DetectedObjectMessage
   ) {
     this.childProcess.send(message);
   }
@@ -41,8 +40,8 @@ class CodeEvaluator {
       | ReadyMessage
       | MessageWithId<PerformActionMessage>
       | MessageWithId<GetDistanceMessage>
-      | MessageWithId<DetectObjectMessage>
       | ClearCurrentTaskMessage
+      | GetEnvUpdateMessage
   ) => {
     switch (message.type) {
       case "READY": {
@@ -75,19 +74,8 @@ class CodeEvaluator {
         });
         break;
       }
-      case "DETECT_OBJECT": {
-        const image = await robot.camera.captureImage();
-        const offCenterAngle = await sendDetectObject({
-          image,
-          name: (message as DetectObjectMessage).name,
-          operationId: message.operationId,
-        });
-
-        this.sendMessage({
-          type: "DETECTED_OBJECT",
-          offCenterAngle,
-          operationId: message.operationId,
-        });
+      case "GET_ENV_UPDATE": {
+        getEnvUpdates();
         break;
       }
       case "CLEAR_CURRENT_TASK": {

@@ -1,36 +1,39 @@
 import { RobotServerMessageContents } from "../../command-interface";
-import { sendEnvUpdates, sendGetEnvUpdates } from "../send-messages";
-import { deleteFile } from "../../utils";
+import {
+  sendExecuteCode,
+  sendRenderLed,
+  sendStartRecoding,
+} from "../send-messages";
 import { robotState } from "../../robot-state";
-import { calculateOffCenterAngle, detectObject } from "./utils";
-
-const ENV_REFRESH_INTERVAL = 1000;
+import { ask, convert } from "../../processors";
+import { playAudio } from "../../audio-io";
 
 export const processEnvUpdatesMessage = async (
   content: RobotServerMessageContents["ENV_UPDATES"]
 ) => {
-  const { detectionResults, filePath } = await detectObject(content.image);
+  sendRenderLed("FLOW_COLOR");
 
-  robotState.setEnvUpdates({
-    updatedTime: Date.now(),
+  const input = {
+    type: "env-update",
+    currentTask: robotState.currentTask,
     ultrasonicSensorReading: content.referenceDistance,
-  });
-  if (robotState.isRecording && !robotState.currentTask) {
-    robotState.setRefreshEnvTimer(
-      setTimeout(sendGetEnvUpdates, ENV_REFRESH_INTERVAL)
-    );
+  };
+
+  const answer = await ask(JSON.stringify(input), content.image);
+  sendRenderLed("OFF");
+
+  if (!answer) return;
+
+  const parsedAnswer = JSON.parse(answer);
+
+  robotState.setCurrentTask(parsedAnswer.currentTask);
+  sendExecuteCode({ code: parsedAnswer.codeToExecute });
+
+  if (parsedAnswer.vocalResponse) {
+    const audioFile = await convert(parsedAnswer.vocalResponse);
+    await playAudio(audioFile);
   }
-
-  sendEnvUpdates({
-    image: content.image,
-    objects: detectionResults.map((r) => ({
-      name: r.name,
-      confidence: r.confidence,
-      coordinate: r.coordinate,
-      distance: 0,
-      offCenterAngle: calculateOffCenterAngle(r.coordinate),
-    })),
-  });
-
-  deleteFile(filePath);
+  if (parsedAnswer.expectAudioInput) {
+    sendStartRecoding();
+  }
 };

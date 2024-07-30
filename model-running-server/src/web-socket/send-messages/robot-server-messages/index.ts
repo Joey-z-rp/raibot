@@ -5,7 +5,6 @@ import { buildSendRenderLed } from "./render-led";
 import { buildSendPlayAudio } from "./play-audio";
 import { buildSendGetEnvUpdates } from "./get-env-updates";
 import { buildSendStartMonitoringAudioInput } from "./start-monitoring-audio-input";
-import { buildSendDetectedObject } from "./detected-object";
 import { buildSendExecuteCode } from "./execute-code";
 
 let currentConnection: WebSocket;
@@ -28,7 +27,5 @@ export const sendGetEnvUpdates = buildSendGetEnvUpdates(sendMessage);
 
 export const sendStartMonitoringAudioInput =
   buildSendStartMonitoringAudioInput(sendMessage);
-
-export const sendDetectedObject = buildSendDetectedObject(sendMessage);
 
 export const sendExecuteCode = buildSendExecuteCode(sendMessage);

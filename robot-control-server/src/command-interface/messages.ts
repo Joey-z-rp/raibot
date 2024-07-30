@@ -4,7 +4,6 @@ export const availableRobotServerMessages = [
   "ROBOT_STATUS",
   "CAPTURED_IMAGE",
   "ENV_UPDATES",
-  "DETECT_OBJECT",
   "CHECK_AUDIO_TRIGGER",
   "AUDIO_INPUT",
   "SET_CURRENT_TASK",
@@ -24,11 +23,6 @@ export type RobotServerMessageContents = {
   ENV_UPDATES: {
     image: string;
     referenceDistance: number;
-  };
-  DETECT_OBJECT: {
-    image: string;
-    name: string;
-    operationId: string;
   };
   CHECK_AUDIO_TRIGGER: {
     data: string;

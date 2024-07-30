@@ -17,9 +17,9 @@ const messageHandlers: Record<RobotServerMessage, MessageHandler> = {
   ROBOT_STATUS: processRobotStatusMessage as MessageHandler,
   CAPTURED_IMAGE: processCapturedImageMessage as MessageHandler,
   ENV_UPDATES: () => {},
-  DETECT_OBJECT: () => {},
   AUDIO_INPUT: () => {},
   CHECK_AUDIO_TRIGGER: () => {},
+  SET_CURRENT_TASK: () => {},
 };
 
 export const processRobotServerMessages = (

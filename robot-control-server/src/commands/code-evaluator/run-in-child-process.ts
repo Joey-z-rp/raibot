@@ -2,10 +2,9 @@ import { v4 } from "uuid";
 import {
   ActionPerformedMessage,
   ClearCurrentTaskMessage,
-  DetectObjectMessage,
-  DetectedObjectMessage,
   EvaluateCodeMessage,
   GetDistanceMessage,
+  GetEnvUpdateMessage,
   LatestDistanceMessage,
   PerformActionMessage,
   ReadyMessage,
@@ -18,8 +17,8 @@ const sendMessage = (
     | ReadyMessage
     | PerformActionMessage
     | GetDistanceMessage
-    | DetectObjectMessage
     | ClearCurrentTaskMessage
+    | GetEnvUpdateMessage
 ) => {
   const operationId = v4();
   process.send({
@@ -40,17 +39,12 @@ const performAction = async (action: string) =>
 const getUltrasonicSensorReading = async () =>
   sendMessage({ type: "GET_DISTANCE" });
 
-const detectObject = async (name: string) =>
-  sendMessage({ type: "DETECT_OBJECT", name });
-
 const clearCurrentTask = () => sendMessage({ type: "CLEAR_CURRENT_TASK" });
 
+const getEnvUpdate = () => sendMessage({ type: "GET_ENV_UPDATE" });
+
 const processMessage = async (
-  message:
-    | EvaluateCodeMessage
-    | ActionPerformedMessage
-    | LatestDistanceMessage
-    | DetectedObjectMessage
+  message: EvaluateCodeMessage | ActionPerformedMessage | LatestDistanceMessage
 ) => {
   switch (message.type) {
     case "EVALUATE_CODE": {
@@ -63,14 +57,6 @@ const processMessage = async (
     case "LATEST_DISTANCE": {
       promiseMap[message.operationId]?.(
         (message as LatestDistanceMessage).distance
-      );
-    }
-    case "DETECTED_OBJECT": {
-      const offCenterAngle = (message as DetectedObjectMessage).offCenterAngle;
-      promiseMap[message.operationId]?.(
-        offCenterAngle && {
-          offCenterAngle,
-        }
       );
     }
   }

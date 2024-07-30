@@ -21,7 +21,6 @@ export const availableCommands = [
   "START_RECORDING",
   "PLAY_AUDIO",
   "START_MONITORING_AUDIO_INPUT",
-  "DETECTED_OBJECT",
   "EXECUTE_CODE",
 ] as const;
 
@@ -59,10 +58,6 @@ export type CommandArguments = {
     data: string;
   };
   START_MONITORING_AUDIO_INPUT: {};
-  DETECTED_OBJECT: {
-    offCenterAngles: number[];
-    operationId: string;
-  };
   EXECUTE_CODE: {
     code: string;
   };
