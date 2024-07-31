@@ -6,12 +6,13 @@ const SAMPLE_RATE = 16000;
 const MAX_SILENCED_SAMPLES = Math.floor(
   (SILENCE_DURATION / 1000) * SAMPLE_RATE
 );
+const EXCEED_THRESHOLD_MIN_COUNT = 20;
 const BIT_DEPTH = 32768; // 16 bit
 
 type OnRecorded = (audioBuffer: Buffer | undefined) => Promise<void>;
 
 export class AutoRecorder {
-  private recordingStream: Stream;
+  private monitorStream: Stream;
 
   private isAutoRecording: boolean;
 
@@ -23,10 +24,12 @@ export class AutoRecorder {
 
   private audioChunks: Buffer[];
 
+  private recording;
+
   constructor() {
     this.isAutoRecording = false;
     this.isRecording = false;
-    this.recordingStream = recorder.record().stream();
+    this.monitorStream = recorder.record().stream();
     this.recentSamples = [];
     this.audioChunks = [];
     this.registerListener();
@@ -73,12 +76,38 @@ export class AutoRecorder {
     return false;
   }
 
-  record(chunk: Buffer) {
-    this.audioChunks.push(chunk);
-    if (this.detectSilence(0.15)) {
-      this.isRecording = false;
-      this.onRecorded(Buffer.concat(this.audioChunks));
+  isSilence(recordedBuffer: Buffer, threshold = 0.08) {
+    const samples = Array.from(new Int16Array(recordedBuffer.buffer));
+    const count = samples.reduce((count, sample) => {
+      const normalizedSample = Math.abs(sample) / BIT_DEPTH;
+
+      return normalizedSample > threshold ? count + 1 : count;
+    }, 0);
+
+    return count < EXCEED_THRESHOLD_MIN_COUNT;
+  }
+
+  record() {
+    if (!this.recording) {
+      console.info("Recording...");
       this.audioChunks = [];
+      this.recentSamples = [];
+      this.recording = recorder.record();
+      const stream = this.recording.stream();
+      stream.on("data", (recordingChunk: Buffer) =>
+        this.audioChunks.push(recordingChunk)
+      );
+    }
+
+    if (this.detectSilence(0.1)) {
+      this.recording.stop();
+      this.recording = undefined;
+      this.isRecording = false;
+      const recordedBuffer = Buffer.concat(this.audioChunks);
+      this.onRecorded(
+        this.isSilence(recordedBuffer) ? undefined : recordedBuffer
+      );
+      console.info("Recording completed");
     }
   }
 
@@ -95,11 +124,10 @@ export class AutoRecorder {
         this.isRecording = true;
       }
       if (this.isRecording) {
-        this.audioChunks = [];
-        this.record(chunk);
+        this.record();
       }
     };
-    this.recordingStream.on("data", monitor);
+    this.monitorStream.on("data", monitor);
   }
 
   startAutoRecording(onRecorded: OnRecorded) {
