@@ -1,28 +1,35 @@
 import * as recorder from "./node-record-lpcm16";
-import { EventEmitter, Stream } from "stream";
+import { Stream } from "stream";
 
+const SILENCE_DURATION = 1500;
+const SAMPLE_RATE = 16000;
+const MAX_SILENCED_SAMPLES = Math.floor(
+  (SILENCE_DURATION / 1000) * SAMPLE_RATE
+);
 const BIT_DEPTH = 32768; // 16 bit
-const START_RECORDING_EVENT = "startRecording";
-const STOP_RECORDING_EVENT = "stopRecording";
 
 type OnRecorded = (audioBuffer: Buffer | undefined) => Promise<void>;
 
 export class AutoRecorder {
-  private monitorStream: Stream;
+  private recordingStream: Stream;
+
+  private isAutoRecording: boolean;
 
   private isRecording: boolean;
 
-  private event: EventEmitter;
-
   private recentSamples: number[];
 
-  private recording;
+  private onRecorded: OnRecorded;
+
+  private audioChunks: Buffer[];
 
   constructor() {
+    this.isAutoRecording = false;
     this.isRecording = false;
-    this.monitorStream = recorder.record().stream();
-    this.event = new EventEmitter();
+    this.recordingStream = recorder.record().stream();
     this.recentSamples = [];
+    this.audioChunks = [];
+    this.registerListener();
   }
 
   detectSound(data: Buffer, threshold = 0.2, consecutiveSamples = 5) {
@@ -44,19 +51,7 @@ export class AutoRecorder {
     return false;
   }
 
-  detectSilence(
-    data: Buffer,
-    threshold = 0.08,
-    silenceDuration = 1500,
-    sampleRate = 16000,
-    maxSpikes = 10
-  ) {
-    const samples = new Int16Array(data.buffer);
-    const maxSilencedSamples = Math.floor(
-      (silenceDuration / 1000) * sampleRate
-    );
-    this.recentSamples = this.recentSamples.concat(Array.from(samples));
-
+  detectSilence(threshold = 0.08, maxSpikes = 10) {
     let spikeCount = 0;
     let silentCount = 0;
 
@@ -65,10 +60,7 @@ export class AutoRecorder {
 
       if (normalizedSample < threshold) {
         silentCount++;
-        if (silentCount >= maxSilencedSamples) {
-          this.recentSamples = [];
-          return true;
-        }
+        if (silentCount >= MAX_SILENCED_SAMPLES) return true;
       } else {
         spikeCount++;
         if (spikeCount > maxSpikes) {
@@ -78,87 +70,51 @@ export class AutoRecorder {
       }
     }
 
-    this.recentSamples = this.recentSamples.slice(-maxSilencedSamples);
-
     return false;
   }
 
-  registerRecordingEvents(onRecorded: OnRecorded, noSoundTimeout = 4000) {
-    const audioChunks = [];
-    let isTimeout = false;
+  record(chunk: Buffer) {
+    this.audioChunks.push(chunk);
+    if (this.detectSilence(0.15)) {
+      this.isRecording = false;
+      this.onRecorded(Buffer.concat(this.audioChunks));
+      this.audioChunks = [];
+    }
+  }
 
-    const startRecordingListener = () => {
-      if (!this.isRecording) {
+  registerListener() {
+    const monitor = (chunk: Buffer) => {
+      if (!this.isAutoRecording && !this.isRecording) return;
+
+      const samples = new Int16Array(chunk.buffer);
+      this.recentSamples = this.recentSamples.concat(Array.from(samples));
+      this.recentSamples = this.recentSamples.slice(-MAX_SILENCED_SAMPLES);
+
+      if (this.isAutoRecording && this.detectSound(chunk)) {
+        this.isAutoRecording = false;
         this.isRecording = true;
-        this.recording = recorder.record();
-        const stream = this.recording.stream();
-        stream.on("data", (chunk: Buffer) => audioChunks.push(chunk));
-
-        let isCheckingSilence = false;
-        let timer: NodeJS.Timeout;
-        const monitorOutput = (data) => {
-          const stop = () => {
-            this.event.emit(STOP_RECORDING_EVENT);
-            this.monitorStream.removeListener("data", monitorOutput);
-          };
-          if (!isCheckingSilence) {
-            if (!timer)
-              timer = setTimeout(() => {
-                isTimeout = true;
-                stop();
-              }, noSoundTimeout);
-            if (this.detectSound(data, 0.15)) {
-              isCheckingSilence = true;
-              timer && clearTimeout(timer);
-              console.info("Checking silence...");
-            }
-          }
-          if (
-            isCheckingSilence &&
-            this.detectSilence(data) &&
-            this.isRecording
-          ) {
-            stop();
-          }
-        };
-        this.monitorStream.on("data", monitorOutput);
-
-        this.event.removeListener(
-          START_RECORDING_EVENT,
-          startRecordingListener
-        );
-        console.info("Recording...");
       }
-    };
-    this.event.on(START_RECORDING_EVENT, startRecordingListener);
-
-    const stopRecordingListener = async () => {
       if (this.isRecording) {
-        this.recording.stop();
-        console.info(isTimeout ? "Recording stopped" : "Recording completed");
-        await onRecorded(isTimeout ? undefined : Buffer.concat(audioChunks));
-        this.isRecording = false;
-        this.event.removeListener(STOP_RECORDING_EVENT, stopRecordingListener);
+        this.audioChunks = [];
+        this.record(chunk);
       }
     };
-    this.event.on(STOP_RECORDING_EVENT, stopRecordingListener);
+    this.recordingStream.on("data", monitor);
   }
 
   startAutoRecording(onRecorded: OnRecorded) {
-    this.registerRecordingEvents(onRecorded);
+    if (this.isRecording) return;
 
-    const monitorInput = (data: Buffer) => {
-      if (this.detectSound(data) && !this.isRecording) {
-        this.event.emit(START_RECORDING_EVENT);
-        this.monitorStream.removeListener("data", monitorInput);
-      }
-    };
-    this.monitorStream.on("data", monitorInput);
+    this.onRecorded = onRecorded;
+    this.isAutoRecording = true;
   }
 
   startRecording(onRecorded: OnRecorded) {
-    this.registerRecordingEvents(onRecorded);
-    this.event.emit(START_RECORDING_EVENT);
+    if (this.isRecording) return;
+
+    this.onRecorded = onRecorded;
+    this.isAutoRecording = false;
+    this.isRecording = true;
   }
 }
 
