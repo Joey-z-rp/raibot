@@ -2,31 +2,46 @@ import * as recorder from "node-record-lpcm16";
 import { createWriteStream } from "fs";
 import { v4 } from "uuid";
 import { TEMP_AUDIO_FOLDER_PATH } from "../shared/constants";
-import { EventEmitter, Stream } from "stream";
+import { Stream } from "stream";
 import { deleteFile } from "../utils";
 
+const SILENCE_DURATION = 1500;
+const SAMPLE_RATE = 16000;
+const MAX_SILENCED_SAMPLES = Math.floor(
+  (SILENCE_DURATION / 1000) * SAMPLE_RATE
+);
+const EXCEED_THRESHOLD_MIN_COUNT = 20;
 const BIT_DEPTH = 32768; // 16 bit
-const START_RECORDING_EVENT = "startRecording";
-const STOP_RECORDING_EVENT = "stopRecording";
+
+const getFilePath = () => `${TEMP_AUDIO_FOLDER_PATH}/${v4()}.wav`;
 
 type OnRecorded = (filePath?: string) => Promise<void>;
 
 export class AutoRecorder {
   private monitorStream: Stream;
 
+  private isAutoRecording: boolean;
+
   private isRecording: boolean;
 
-  private event: EventEmitter;
-
   private recentSamples: number[];
+
+  private onRecorded: OnRecorded;
+
+  private audioChunks: Buffer[];
+
+  private filePath: string;
 
   private recording;
 
   constructor() {
+    this.isAutoRecording = false;
     this.isRecording = false;
     this.monitorStream = recorder.record().stream();
-    this.event = new EventEmitter();
     this.recentSamples = [];
+    this.audioChunks = [];
+    this.filePath = undefined;
+    this.registerListener();
   }
 
   detectSound(data: Buffer, threshold = 0.3, consecutiveSamples = 5) {
@@ -48,19 +63,7 @@ export class AutoRecorder {
     return false;
   }
 
-  detectSilence(
-    data: Buffer,
-    threshold = 0.08,
-    silenceDuration = 1500,
-    sampleRate = 16000,
-    maxSpikes = 10
-  ) {
-    const samples = new Int16Array(data.buffer);
-    const maxSilencedSamples = Math.floor(
-      (silenceDuration / 1000) * sampleRate
-    );
-    this.recentSamples = this.recentSamples.concat(Array.from(samples));
-
+  detectSilence(threshold = 0.08, maxSpikes = 10) {
     let spikeCount = 0;
     let silentCount = 0;
 
@@ -69,10 +72,7 @@ export class AutoRecorder {
 
       if (normalizedSample < threshold) {
         silentCount++;
-        if (silentCount >= maxSilencedSamples) {
-          this.recentSamples = [];
-          return true;
-        }
+        if (silentCount >= MAX_SILENCED_SAMPLES) return true;
       } else {
         spikeCount++;
         if (spikeCount > maxSpikes) {
@@ -82,89 +82,78 @@ export class AutoRecorder {
       }
     }
 
-    this.recentSamples = this.recentSamples.slice(-maxSilencedSamples);
-
     return false;
   }
 
-  registerRecordingEvents(onRecorded: OnRecorded, noSoundTimeout = 4000) {
-    const getFilePath = () => `${TEMP_AUDIO_FOLDER_PATH}/${v4()}.wav`;
-    let filePath: string;
-    let isTimeout = false;
+  isSilence(recordedBuffer: Buffer, threshold = 0.08) {
+    const samples = Array.from(new Int16Array(recordedBuffer.buffer));
+    const count = samples.reduce((count, sample) => {
+      const normalizedSample = Math.abs(sample) / BIT_DEPTH;
 
-    const startRecordingListener = () => {
-      if (!this.isRecording) {
+      return normalizedSample > threshold ? count + 1 : count;
+    }, 0);
+
+    return count < EXCEED_THRESHOLD_MIN_COUNT;
+  }
+
+  record() {
+    if (!this.recording) {
+      console.info("Recording...");
+      this.audioChunks = [];
+      this.recentSamples = [];
+      this.filePath = getFilePath();
+      this.recording = recorder.record();
+      const stream = this.recording.stream();
+      stream.pipe(createWriteStream(this.filePath));
+      stream.on("data", (recordingChunk: Buffer) =>
+        this.audioChunks.push(recordingChunk)
+      );
+    }
+
+    if (this.detectSilence(0.1)) {
+      this.recording.stop();
+      this.recording = undefined;
+      this.isRecording = false;
+      const recordedBuffer = Buffer.concat(this.audioChunks);
+      const isEmpty = this.isSilence(recordedBuffer);
+      if (isEmpty) deleteFile(this.filePath);
+      this.onRecorded(isEmpty ? undefined : this.filePath);
+      this.filePath = undefined;
+      console.info("Recording completed");
+    }
+  }
+
+  registerListener() {
+    const monitor = (chunk: Buffer) => {
+      if (!this.isAutoRecording && !this.isRecording) return;
+
+      const samples = new Int16Array(chunk.buffer);
+      this.recentSamples = this.recentSamples.concat(Array.from(samples));
+      this.recentSamples = this.recentSamples.slice(-MAX_SILENCED_SAMPLES);
+
+      if (this.isAutoRecording && this.detectSound(chunk)) {
+        this.isAutoRecording = false;
         this.isRecording = true;
-        filePath = getFilePath();
-        this.recording = recorder.record();
-        const stream = this.recording.stream();
-        stream.pipe(createWriteStream(filePath));
-
-        let isCheckingSilence = false;
-        let timer: NodeJS.Timeout;
-        const monitorOutput = (data) => {
-          const stop = () => {
-            this.event.emit(STOP_RECORDING_EVENT);
-            this.monitorStream.removeListener("data", monitorOutput);
-          };
-          if (!isCheckingSilence) {
-            if (!timer)
-              timer = setTimeout(() => {
-                isTimeout = true;
-                stop();
-              }, noSoundTimeout);
-            if (this.detectSound(data, 0.2)) {
-              isCheckingSilence = true;
-              timer && clearTimeout(timer);
-              console.info("Checking silence...");
-            }
-          }
-          if (
-            isCheckingSilence &&
-            this.detectSilence(data) &&
-            this.isRecording
-          ) {
-            stop();
-          }
-        };
-        this.monitorStream.on("data", monitorOutput);
-
-        this.event.removeListener(
-          START_RECORDING_EVENT,
-          startRecordingListener
-        );
-        console.info("Recording...");
       }
-    };
-    this.event.on(START_RECORDING_EVENT, startRecordingListener);
-
-    const stopRecordingListener = () => {
       if (this.isRecording) {
-        this.recording.stop();
-        console.info(isTimeout ? "Recording stopped" : "Recording completed");
-        if (isTimeout) deleteFile(filePath);
-        onRecorded(isTimeout ? undefined : filePath);
-        this.isRecording = false;
-        this.event.removeListener(STOP_RECORDING_EVENT, stopRecordingListener);
+        this.record();
       }
     };
-    this.event.on(STOP_RECORDING_EVENT, stopRecordingListener);
+    this.monitorStream.on("data", monitor);
   }
 
   startAutoRecording(onRecorded: OnRecorded) {
-    this.registerRecordingEvents(onRecorded);
+    if (this.isRecording) return;
 
-    const monitorInput = (data: Buffer) => {
-      if (this.detectSound(data) && !this.isRecording) {
-        this.event.emit(START_RECORDING_EVENT);
-        this.monitorStream.removeListener("data", monitorInput);
-      }
-    };
-    this.monitorStream.on("data", monitorInput);
+    this.onRecorded = onRecorded;
+    this.isAutoRecording = true;
   }
 
   startRecording(onRecorded: OnRecorded) {
-    this.registerRecordingEvents(onRecorded);
-    this.event.emit(START_RECORDING_EVENT);
+    if (this.isRecording) return;
+
+    this.onRecorded = onRecorded;
+    this.isAutoRecording = false;
+    this.isRecording = true;
   }
 }
