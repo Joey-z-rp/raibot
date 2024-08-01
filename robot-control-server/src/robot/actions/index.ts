@@ -17,11 +17,13 @@ import { stepRightSteps } from "./step-right";
 import { turnLeftSteps } from "./turn-left";
 import { turnRightSteps } from "./turn-right";
 import { ActionStep } from "./types";
+import { waveSteps } from "./wave";
 
 const actionSteps: Record<ActionType, ActionStep<ActionType>[]> = {
   MOVE_LEG: moveLegSteps,
   STAND: standSteps,
   REST: restSteps,
+  WAVE: waveSteps,
   MOVE_FORWARD: moveForwardSteps,
   MOVE_BACKWARD: moveBackwardSteps,
   STEP_LEFT: stepLeftSteps,

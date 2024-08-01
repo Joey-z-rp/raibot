@@ -10,6 +10,7 @@ export const ActionButton = ({
   className,
 }: {
   action:
+    | "WAVE"
     | "MOVE_FORWARD"
     | "MOVE_BACKWARD"
     | "STEP_LEFT"

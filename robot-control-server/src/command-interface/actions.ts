@@ -6,6 +6,7 @@ export const actionTypes = [
   "MOVE_LEG",
   "STAND",
   "REST",
+  "WAVE",
   "MOVE_FORWARD",
   "MOVE_BACKWARD",
   "STEP_LEFT",
@@ -24,6 +25,7 @@ export type ActionArgs = {
   };
   STAND: {};
   REST: {};
+  WAVE: {};
   MOVE_FORWARD: {};
   MOVE_BACKWARD: {};
   STEP_LEFT: {};

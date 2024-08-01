@@ -125,7 +125,7 @@ const invokeModel = ({
 };
 
 export const runModel = (type: "local" | "claude" = "local") => {
-  createModel();
+  if (type === "local") createModel();
 
   const ask = async (text: string, image?: string) => {
     console.info("User: ", text);

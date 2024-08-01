@@ -7,7 +7,7 @@ export const MovementControl = ({
 }: {
   sendCommand: SendCommand;
 }) => {
-  const performAction = (action: "STAND" | "REST") =>
+  const performAction = (action: "STAND" | "WAVE" | "REST") =>
     sendCommand({
       command: "PERFORM_ACTIONS",
       args: {
@@ -34,6 +34,7 @@ export const MovementControl = ({
       </div>
       <div className="flex gap-1">
         <Button onClick={() => performAction("STAND")}>Stand</Button>
+        <Button onClick={() => performAction("WAVE")}>Wave</Button>
         <Button onClick={() => performAction("REST")}>Rest</Button>
       </div>
     </div>

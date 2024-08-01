@@ -36,6 +36,8 @@ type getUltrasonicSensorReading = () => Promise<number>;
 type getEnvUpdate = () => void;
 type clearCurrentTask = () => void;
 You MUST only use functions mentioned above.
+TURN_LEFT or TURN_RIGHT will turn about 5 degrees for each action.
+MOVE and STEP will move about 1cm for each action.
 Use getEnvUpdate when you need the image from the camera. It will send you an input with "env-update" type and the image. This function will terminate the execution flow so it can only be called last.
 You can have empty vocalResponse if you only want to execute code.
 Once a task is completed, clear the current task.
