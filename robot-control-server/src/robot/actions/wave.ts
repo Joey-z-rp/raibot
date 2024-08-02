@@ -16,34 +16,159 @@ export const waveSteps: ActionStep<"WAVE">[] = [
 
     await Promise.all([
       limbs.frontLeft.moveTo(
-        startingCoordinates.frontLeft.x,
-        startingCoordinates.frontLeft.y + 10
+        startingCoordinates.frontLeft.x - 30,
+        startingCoordinates.frontLeft.y + 30
       ),
       limbs.frontRight.moveTo(
-        startingCoordinates.frontRight.x,
+        startingCoordinates.frontRight.x - 30,
+        startingCoordinates.frontRight.y + 30
+      ),
+    ]);
+    return { angles, startingCoordinates };
+  },
+  async (_, __, allServos, { angles, startingCoordinates }) => {
+    await Promise.all([
+      allServos.frontRightShoulder.setTargetAngle(
+        angles.frontRightShoulder + 60
+      ),
+    ]);
+    return { angles, startingCoordinates };
+  },
+  async (_, limbs, __, { angles, startingCoordinates }) => {
+    await Promise.all([
+      limbs.frontRight.moveTo(
+        startingCoordinates.frontRight.x - 10,
         startingCoordinates.frontRight.y + 10
       ),
-      allServos.frontRightShoulder.setTargetAngle(
-        angles.frontRightShoulder + 10
-      ),
     ]);
-    return { angles };
+    return { angles, startingCoordinates };
   },
-  async (_, __, allServos, { angles }) => {
+  async (_, __, allServos, { angles, startingCoordinates }) => {
     await Promise.all([
       allServos.frontRightShoulder.setTargetAngle(
-        angles.frontRightShoulder - 10
+        angles.frontRightShoulder + 50
       ),
     ]);
-    return { angles };
+    return { angles, startingCoordinates };
   },
-  async (_, __, allServos, { angles }) => {
+  async (_, limbs, __, { angles, startingCoordinates }) => {
+    await Promise.all([
+      limbs.frontRight.moveTo(
+        startingCoordinates.frontRight.x - 30,
+        startingCoordinates.frontRight.y + 30
+      ),
+    ]);
+    return { angles, startingCoordinates };
+  },
+  async (_, __, allServos, { angles, startingCoordinates }) => {
     await Promise.all([
       allServos.frontRightShoulder.setTargetAngle(
-        angles.frontRightShoulder + 10
+        angles.frontRightShoulder + 60
       ),
     ]);
-    return { angles };
+    return { angles, startingCoordinates };
+  },
+  async (_, limbs, __, { angles, startingCoordinates }) => {
+    await Promise.all([
+      limbs.frontRight.moveTo(
+        startingCoordinates.frontRight.x - 10,
+        startingCoordinates.frontRight.y + 10
+      ),
+    ]);
+    return { angles, startingCoordinates };
+  },
+  async (_, __, allServos, { angles, startingCoordinates }) => {
+    await Promise.all([
+      allServos.frontRightShoulder.setTargetAngle(
+        angles.frontRightShoulder + 50
+      ),
+    ]);
+    return { angles, startingCoordinates };
+  },
+  async (_, limbs, __, { angles, startingCoordinates }) => {
+    await Promise.all([
+      limbs.frontRight.moveTo(
+        startingCoordinates.frontRight.x - 30,
+        startingCoordinates.frontRight.y + 30
+      ),
+    ]);
+    return { angles, startingCoordinates };
+  },
+  async (_, __, allServos, { angles, startingCoordinates }) => {
+    await Promise.all([
+      allServos.frontRightShoulder.setTargetAngle(
+        angles.frontRightShoulder + 60
+      ),
+    ]);
+    return { angles, startingCoordinates };
+  },
+  async (_, limbs, __, { angles, startingCoordinates }) => {
+    await Promise.all([
+      limbs.frontRight.moveTo(
+        startingCoordinates.frontRight.x - 10,
+        startingCoordinates.frontRight.y + 10
+      ),
+    ]);
+    return { angles, startingCoordinates };
+  },
+  async (_, __, allServos, { angles, startingCoordinates }) => {
+    await Promise.all([
+      allServos.frontRightShoulder.setTargetAngle(
+        angles.frontRightShoulder + 50
+      ),
+    ]);
+    return { angles, startingCoordinates };
+  },
+  async (_, limbs, __, { angles, startingCoordinates }) => {
+    await Promise.all([
+      limbs.frontRight.moveTo(
+        startingCoordinates.frontRight.x - 30,
+        startingCoordinates.frontRight.y + 30
+      ),
+    ]);
+    return { angles, startingCoordinates };
+  },
+  async (_, __, allServos, { angles, startingCoordinates }) => {
+    await Promise.all([
+      allServos.frontRightShoulder.setTargetAngle(
+        angles.frontRightShoulder + 60
+      ),
+    ]);
+    return { angles, startingCoordinates };
+  },
+  async (_, limbs, __, { angles, startingCoordinates }) => {
+    await Promise.all([
+      limbs.frontRight.moveTo(
+        startingCoordinates.frontRight.x - 10,
+        startingCoordinates.frontRight.y + 10
+      ),
+    ]);
+    return { angles, startingCoordinates };
+  },
+  async (_, __, allServos, { angles, startingCoordinates }) => {
+    await Promise.all([
+      allServos.frontRightShoulder.setTargetAngle(
+        angles.frontRightShoulder + 50
+      ),
+    ]);
+    return { angles, startingCoordinates };
+  },
+  async (_, limbs, __, { angles, startingCoordinates }) => {
+    await Promise.all([
+      limbs.frontRight.moveTo(
+        startingCoordinates.frontRight.x - 30,
+        startingCoordinates.frontRight.y + 30
+      ),
+    ]);
+    return { angles, startingCoordinates };
+  },
+  async (_, __, allServos, { angles, startingCoordinates }) => {
+    await Promise.all([
+      allServos.frontRightShoulder.setTargetAngle(
+        angles.frontRightShoulder + 60
+      ),
+    ]);
+    return { angles, startingCoordinates };
   },
   (_, __, allServos) => {
     return Promise.all(

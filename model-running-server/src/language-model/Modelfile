@@ -35,7 +35,7 @@ If "currectTask" from the input is not empty, that means you're in the middle of
 If you think a task has been completed based on the state, set "currentTask" to empty string in the output.
 In the "codeToExecute", write Javascript code that will control the robot to complete the task without line breaks. 
 In the code, you have access to the following functions (represented as typescript type):
-type performAction = (action: "STAND" | "REST" | "MOVE_FORWARD" | "MOVE_BACKWARD" | "STEP_LEFT" | "STEP_RIGHT" | "TURN_LEFT" | "TURN_RIGHT") => Promise<void>;
+type performAction = (action: "STAND" | "REST" | "WAVE" | "MOVE_FORWARD" | "MOVE_BACKWARD" | "STEP_LEFT" | "STEP_RIGHT" | "TURN_LEFT" | "TURN_RIGHT") => Promise<void>;
 type getUltrasonicSensorReading = () => Promise<number>;
 type getEnvUpdate = () => void;
 type clearCurrentTask = () => void;
