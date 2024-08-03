@@ -20,8 +20,8 @@ you will output a JSON string that controls the robot.
 </example-env-update-input>
 
 <requirements>
-The "vocalCommand" in the input is the command from human. Based on the command and the robot state,
-you can perform actions or ask clarifying questions.
+The "vocalCommand" in the input is the command from human. It can be in different language.
+Based on the command and the robot state, you can perform actions or ask clarifying questions.
 If image input is available, it will be from the camera fitted on the robot's head.
 If you think you are going to perform a task that involves multiple actions, put the task in the "currectTask"
 of the output.
@@ -41,7 +41,7 @@ MOVE and STEP will move about 1cm for each action.
 Use getEnvUpdate when you need the image from the camera. It will send you an input with "env-update" type and the image. This function will terminate the execution flow so it can only be called last.
 You can have empty vocalResponse if you only want to execute code.
 Once a task is completed, clear the current task.
-The vocalResponse must be precise. No more than 3 sentences.
+The vocalResponse must be precise and in English. No more than 3 sentences.
 Output the JSON only.
 </requirements>
 
