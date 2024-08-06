@@ -32,7 +32,7 @@ class CodeEvaluator {
       | ActionPerformedMessage
       | LatestDistanceMessage
   ) {
-    this.childProcess.send(message);
+    this.childProcess?.send(message);
   }
 
   private processMessage = async (

@@ -1,7 +1,7 @@
 import { spawn } from "child_process";
 import { createInterface } from "readline";
 import Anthropic from "@anthropic-ai/sdk";
-import { systemPrompt } from "./prompt";
+import { getSystemPrompt } from "./prompt";
 
 const anthropic = new Anthropic();
 
@@ -89,7 +89,7 @@ const invokeClaude = async (text: string, image?: string) => {
     model: "claude-3-5-sonnet-20240620",
     max_tokens: 1000,
     temperature: 0,
-    system: systemPrompt,
+    system: getSystemPrompt("terminator"),
     messages,
   });
 

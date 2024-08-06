@@ -7,7 +7,7 @@ import {
 } from "../send-messages";
 import { transcribeAudio } from "./utils";
 
-const TRIGGER_WORD = "robot";
+const TRIGGER_WORD = "terminator";
 const STOP_WORD = "stop";
 
 export const processCheckAudioTriggerMessage = async (
@@ -15,9 +15,10 @@ export const processCheckAudioTriggerMessage = async (
 ) => {
   const transcribedText = await transcribeAudio(content.data);
   console.info({ transcribedText });
-  const hasTrigger = transcribedText?.includes(TRIGGER_WORD);
-  const hasStop = transcribedText?.includes(STOP_WORD);
+  const hasTrigger = transcribedText?.toLowerCase().includes(TRIGGER_WORD);
+  const hasStop = transcribedText?.toLocaleLowerCase().includes(STOP_WORD);
   if (hasStop) {
+    robotState.setCurrentTask("");
     sendStopActions();
     sendStartMonitoringAudioInput();
   } else if (hasTrigger) {
