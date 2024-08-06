@@ -31,7 +31,12 @@ export const processEnvUpdatesMessage = async (
 
   if (parsedAnswer.vocalResponse) {
     const audioFile = await convert(parsedAnswer.vocalResponse);
+    robotState.setIsPlaying({ isPlaying: true });
     await playAudio(audioFile);
+    robotState.setIsPlaying({
+      isPlaying: false,
+      clearQueuedMessage: parsedAnswer.expectAudioInput,
+    });
   }
   if (parsedAnswer.expectAudioInput) {
     sendStartRecoding();

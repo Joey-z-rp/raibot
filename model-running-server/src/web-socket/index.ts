@@ -6,6 +6,8 @@ import {
   initialiseBrowserMessageSender,
   initialiseRobotServerMessageSender,
 } from "./send-messages";
+import { robotState } from "../robot-state";
+import { RobotServerMessageObject } from "../command-interface";
 
 let browserConnection: WebSocket | undefined;
 
@@ -30,7 +32,23 @@ export const initialiseWebSocket = () => {
   });
 
   initialiseRobotServerMessageSender(wsClient);
+  robotState.setProcessMessage(processRobotServerMessages);
   wsClient.on("message", (message) => {
-    processRobotServerMessages(JSON.parse(message.toString()));
+    const parsedMessage = JSON.parse(
+      message.toString()
+    ) as RobotServerMessageObject;
+
+    const isAudioInput = parsedMessage.type === "AUDIO_INPUT";
+    const shouldQueueEnvUpdates =
+      parsedMessage.type === "ENV_UPDATES" &&
+      (!robotState.queuedMessage ||
+        robotState.queuedMessage.type === "ENV_UPDATES");
+    const shouldQueue = isAudioInput || shouldQueueEnvUpdates;
+
+    if (robotState.isPlaying && shouldQueue) {
+      robotState.queueMessage(parsedMessage);
+    } else {
+      processRobotServerMessages(parsedMessage);
+    }
   });
 };
