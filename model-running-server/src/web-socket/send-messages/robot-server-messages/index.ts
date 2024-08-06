@@ -6,6 +6,7 @@ import { buildSendPlayAudio } from "./play-audio";
 import { buildSendGetEnvUpdates } from "./get-env-updates";
 import { buildSendStartMonitoringAudioInput } from "./start-monitoring-audio-input";
 import { buildSendExecuteCode } from "./execute-code";
+import { buildSendStopActions } from "./stop-actions";
 
 let currentConnection: WebSocket;
 
@@ -29,3 +30,5 @@ export const sendStartMonitoringAudioInput =
   buildSendStartMonitoringAudioInput(sendMessage);
 
 export const sendExecuteCode = buildSendExecuteCode(sendMessage);
+
+export const sendStopActions = buildSendStopActions(sendMessage);
