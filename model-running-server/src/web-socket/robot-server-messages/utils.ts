@@ -16,7 +16,7 @@ export const transcribeAudio = async (base64Data: string) => {
   return transcribedText;
 };
 
-const IMAGE_WIDTH = 1280;
+const IMAGE_WIDTH = 640;
 const CAMERA_FOV = 75; // degree
 
 export const calculateOffCenterAngle = (coordinate: number[]) => {
