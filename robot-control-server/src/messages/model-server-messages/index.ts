@@ -4,6 +4,7 @@ import { SendMessage } from "./types";
 import { monitorAudioInput } from "./monitor-audio-input";
 import { buildSendAudioInput } from "./audio-input";
 import { buildSendSetCurrentTask } from "./set-current-task";
+import { buildSendDetectObject } from "./detect-object";
 
 let currentConnection: WebSocket;
 
@@ -21,5 +22,7 @@ export const initialiseServerMessageSender = (connection: WebSocket) => {
 export const sendEnvUpdates = buildSendEnvUpdates(sendMessage);
 
 export const sendAudioInput = buildSendAudioInput(sendMessage);
+
+export const sendDetectObject = buildSendDetectObject(sendMessage);
 
 export const sendSetCurrentTask = buildSendSetCurrentTask(sendMessage);

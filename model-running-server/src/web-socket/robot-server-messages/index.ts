@@ -5,6 +5,7 @@ import {
 } from "../../command-interface";
 import { processAudioInputMessage } from "./audio-input";
 import { processCheckAudioTriggerMessage } from "./check-audio-trigger";
+import { processDetectObjectMessage } from "./detect-object";
 import { processEnvUpdatesMessage } from "./env-updates";
 import { processSetCurrentTaskMessage } from "./set-current-task";
 
@@ -18,6 +19,7 @@ const messageHandlers: Record<RobotServerMessage, MessageHandler> = {
   ENV_UPDATES: processEnvUpdatesMessage,
   CHECK_AUDIO_TRIGGER: processCheckAudioTriggerMessage,
   AUDIO_INPUT: processAudioInputMessage,
+  DETECT_OBJECT: processDetectObjectMessage,
   SET_CURRENT_TASK: processSetCurrentTaskMessage,
 };
 

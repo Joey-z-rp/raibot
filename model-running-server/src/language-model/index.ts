@@ -128,18 +128,21 @@ export const runModel = (type: "local" | "claude" = "local") => {
   if (type === "local") createModel();
 
   const ask = async (text: string, image?: string) => {
-    console.info("User: ", text);
+    console.info("Human: ", text);
     if (isProcessing)
       return console.warn("Previous conversation is still in progress");
 
     isProcessing = true;
-    console.info({ text, type, image: !!image });
+    process.env.DEBUG && console.info({ text, type, image: !!image });
     const response = await invokeModel({ text, type, image });
 
     if (messages.length > MESSAGE_LIMIT)
       messages.splice(messages.length - MESSAGE_LIMIT);
     isProcessing = false;
-    console.info("Response: ", response);
+    process.env.DEBUG && console.info("Response: ", response);
+    try {
+      console.info("Terminator: ", JSON.parse(response).vocalResponse);
+    } catch (e) {}
 
     return response;
   };

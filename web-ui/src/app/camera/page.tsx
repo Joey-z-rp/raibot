@@ -9,7 +9,7 @@ export default function Page() {
   const sendCaptureCommand = (action: CaptureImageAction) => {
     sendCommand({
       command: "CAPTURE_IMAGE",
-      args: { action },
+      args: { action, shouldDetectObjects: false },
     });
   };
 

@@ -51,6 +51,7 @@ export type CommandArguments = {
   MEASURE_DISTANCE: {};
   CAPTURE_IMAGE: {
     action: CaptureImageAction;
+    shouldDetectObjects: boolean;
   };
   GET_ENV_UPDATES: {};
   START_RECORDING: {};

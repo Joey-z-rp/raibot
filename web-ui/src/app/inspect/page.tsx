@@ -11,8 +11,8 @@ export default function Page() {
   const { sendCommand } = useRobotServer();
   const sendGetEnvUpdatesCommand = () => {
     sendCommand({
-      command: "GET_ENV_UPDATES",
-      args: {},
+      command: "CAPTURE_IMAGE",
+      args: { action: "STILL", shouldDetectObjects: true },
     });
   };
 
