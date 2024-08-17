@@ -28,6 +28,7 @@ export type RobotServerMessageContents = {
   DETECT_OBJECT: {
     image: string;
     name?: string;
+    referenceDistance: number;
   };
   CHECK_AUDIO_TRIGGER: {
     data: string;
@@ -57,6 +58,7 @@ export type ModelServerMessageContents = {
       name: string;
       confidence: number;
       coordinate: number[];
+      distance: number;
       offCenterAngle: number;
     }[];
   };

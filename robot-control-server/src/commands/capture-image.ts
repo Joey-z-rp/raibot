@@ -10,7 +10,8 @@ export const captureImage = async ({
     case "STILL": {
       const image = await robot.camera.captureImage();
       if (!shouldDetectObjects) return sendImage(image);
-      await sendDetectObject({ image, name: "" });
+      const referenceDistance = await robot.ultrasonic.getDistance();
+      await sendDetectObject({ image, name: "", referenceDistance });
     }
     case "VIDEO":
       return robot.camera.captureVideo(sendImage);
